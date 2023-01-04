@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for crown dashboard",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "cd ../client && npm run build",
+    "start": "nodemon server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "pcg",
+  "license": "MIT",
+  "dependencies": {
+    "@oauth-everything/passport-discord": "^1.0.2",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.6",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "gravatar": "^1.8.1",
+    "mongoose": "^5.13.2",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.10"
+  }
+}

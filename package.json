@@ -1,0 +1,29 @@
+{
+  "name": "crowndashboard",
+  "version": "1.0.0",
+  "engines": {
+    "node": "14.17.2"
+  },
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^6.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "cd server && npm install && npm install --only=dev --no-shrinkwrap",
+    "start": "cd server && node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simmch/crowndashboard.git"
+  },
+  "author": "pcg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/simmch/crowndashboard/issues"
+  },
+  "homepage": "https://github.com/simmch/crowndashboard#readme"
+}
