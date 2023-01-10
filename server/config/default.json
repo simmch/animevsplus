@@ -1,6 +1,6 @@
 {
     "mongoURI": "mongodb+srv://92bricks:eg4umv8tByo27nDt@partychatgamingdev.zhrbu.mongodb.net/PCGPROD",
-    "CLIENT_ID": "861296553704816671",
-    "CLIENT_SECRET": "_Si26T20ZLRGF5HvSvRj3d5t_OG-YjEa",
+    "CLIENT_ID": "1062227127199612948",
+    "CLIENT_SECRET": "3MtTWTLqec81z4bpTiTuf43Jdscg83Cp",
     "CLIENT_REDIRECT": "/auth/redirect"
 }
