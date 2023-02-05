@@ -288,7 +288,10 @@ export const NewTitle = ({auth, history, saveTitle}) => {
                                     <Button type="submit">Create Title</Button>
                                     <br />
                                     <br />
+                                    {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatetitles"><Button variant="warning">Update Title</Button></Link> 
+                                    : <span></span>
+                                    }
                                     <br/>
                                     <br />
                                     {submission_alert_dom}

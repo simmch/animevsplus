@@ -225,7 +225,7 @@ const Sidebar = (props) => {
             </Link>
           </li>
           
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("CARDS") ? 
           <li
             className={
               isPathActive("/newcard")
@@ -244,7 +244,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("SUMMONS") ? 
           <li
             className={
               isPathActive("/newpet")
@@ -263,7 +263,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("ARMS") ? 
           <li
             className={
               isPathActive("/newarm")
@@ -282,7 +282,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("TITLES") ? 
           <li
             className={
               isPathActive("/newtitle")
@@ -301,7 +301,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("UNIVERSES") ? 
           <li
             className={
               isPathActive("/newuniverse")
@@ -320,7 +320,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("ABYSS") ? 
           <li
             className={
               isPathActive("/newabyss")
@@ -339,7 +339,7 @@ const Sidebar = (props) => {
           </li> 
           : <span></span>}
 
-          {auth.user.data.IS_ADMIN ? 
+          {auth.user.data.IS_ADMIN || auth.user.data.includes("SCENARIOS") ? 
           <li
             className={
               isPathActive("/newscenario")

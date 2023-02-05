@@ -1127,7 +1127,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     <Button type="submit">Create Card</Button>
                                     <br />
                                     <br />
+                                    {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatecards"><Button variant="warning">Update Cards</Button></Link> 
+                                    : <span></span>
+                                    }
                                     <br/>
                                     <br />
                                     {submission_alert_dom}

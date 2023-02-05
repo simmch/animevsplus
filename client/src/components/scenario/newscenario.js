@@ -453,7 +453,10 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                     <Button type="submit">Create Scenario</Button>
                                     <br />
                                     <br />
+                                    {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatescenario"><Button variant="warning">Update Scenario</Button></Link> 
+                                    : <span></span>
+                                    }
                                     <br/>
                                     <br />
                                     {submission_alert_dom}
