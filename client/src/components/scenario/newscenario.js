@@ -14,6 +14,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
         universe: [],
         loading: true
     });
+
     const [cards, setCard] = useState({
         card: [],
         loading: true
@@ -24,13 +25,19 @@ export const NewScenario = ({auth, history, saveScenario}) => {
         loading: true
     });
 
-
     const [data, setData] = useState(scenarioInitialState);
+    const [scenarioData, setScenario] = useState({
+        scenarios: [],
+        loading: true
+    });
+
     const [validated, setValidated] = useState(false);
     const [show, setShow] = useState(false);
 
     const {
         TITLE,
+        MUST_COMPLETE,
+        IS_RAID,
         IMAGE,
         ENEMY_LEVEL,
         ENEMIES,
@@ -46,6 +53,11 @@ export const NewScenario = ({auth, history, saveScenario}) => {
             axios.get('/crown/universes')
                 .then((res) => {
                     setUniverse({universe: res.data, loading: false})
+                })
+
+            axios.get('/crown/scenarios')
+                .then((res) => {
+                    setScenario({scenarios: res.data, loading: false})
                 })
         }
     }, [auth])
@@ -70,6 +82,13 @@ export const NewScenario = ({auth, history, saveScenario}) => {
         setData({
             ...data,
             AVAILABLE: Boolean(e.target.value)
+        })
+    }
+
+    const isRaidHandler = (e) => {
+        setData({
+            ...data,
+            IS_RAID: Boolean(e.target.value)
         })
     }
 
@@ -214,6 +233,33 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                 
             }
         }
+    }
+
+    var scenarioHandler = (e) => {
+        if(e != null){
+            let value = e
+            const scenarioList = [];
+            for(const ti of value){
+                if(!data.MUST_COMPLETE.includes(ti)){
+                    scenarioList.push(ti.value)
+                }
+            }
+            if(scenarioList){
+                setData({
+                    ...data,
+                    MUST_COMPLETE: scenarioList,
+                })
+            }
+            
+        }
+    }
+
+    if(!scenarioData.loading) {
+        var scenarioSelector = scenarioData.scenarios.map(scenario => {
+            return {
+                value: scenario.TITLE, label: `${scenario.TITLE}`
+            }
+        })
     }
 
     console.log(data)
@@ -430,8 +476,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
  
                                     </Form.Row>
 
-
-
                                     <Form.Row>
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
@@ -446,7 +490,35 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             </Form.Control>
                                             
                                         </Form.Group>
+                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                            <Form.Label> Is Raid? </Form.Label>
+                                            
+                                            <Form.Control
+                                                as="select"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={isRaidHandler}
+                                            >
+                                                <option value={true} name="true">Yes</option>
+                                                <option value={""} name="false">No</option>
+                                            </Form.Control>
+                                            
+                                        </Form.Group>
 
+                                    </Form.Row>
+
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Must First Complete These Scenarios</Form.Label>
+                                            <Select
+                                                onChange={scenarioHandler}
+                                                isMulti
+                                                options={scenarioSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
                                     </Form.Row>
 
                                     

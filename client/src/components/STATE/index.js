@@ -69,6 +69,8 @@ export const universeInitialState = {
 
 export const scenarioInitialState = {
     TITLE: '',
+    MUST_COMPLETE: [],
+    IS_RAID: false,
     IMAGE: '',
     ENEMY_LEVEL: 0,
     ENEMIES: [],

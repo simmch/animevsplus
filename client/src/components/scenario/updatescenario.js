@@ -26,12 +26,11 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
         loading: true
     });
 
-
-
     const [scenarioData, setScenario] = useState({
         scenarios: [],
         loading: true
     })
+
     const [data, setData] = useState(scenarioInitialState);
     const [modalShow, setModalShow] = useState(false);
     const handleClose = () => setModalShow(false);
@@ -88,6 +87,14 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
         
     }
 
+    const isRaidHandler = (e) => {
+        setData({
+            ...data,
+            IS_RAID: Boolean(e.target.value)
+        })
+    }
+
+
     if(!scenarioData.loading) {
         var scenarioSelector = scenarioData.scenarios.map(scenario => {
             return {
@@ -102,6 +109,8 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                     setData({
                         ...data,
                         TITLE: scenario.TITLE,
+                        MUST_COMPLETE: scenario.MUST_COMPLETE,
+                        IS_RAID: scenario.IS_RAID,
                         IMAGE: scenario.IMAGE,
                         ENEMY_LEVEL: scenario.ENEMY_LEVEL,
                         ENEMIES: scenario.ENEMIES,
@@ -112,6 +121,25 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                     })
                 }
             })
+        }
+    }
+
+    var scenarioListHandler = (e) => {
+        if(e != null){
+            let value = e
+            const scenarioList = [];
+            for(const ti of value){
+                if(!data.MUST_COMPLETE.includes(ti)){
+                    scenarioList.push(ti.value)
+                }
+            }
+            if(scenarioList){
+                setData({
+                    ...data,
+                    MUST_COMPLETE: scenarioList,
+                })
+            }
+            
         }
     }
 
@@ -496,6 +524,35 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             </Form.Control>
                                             
                                         </Form.Group>
+                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                            <Form.Label> Is Raid? </Form.Label>
+                                            
+                                            <Form.Control
+                                                as="select"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={isRaidHandler}
+                                            >
+                                                <option value={true} name="true">Yes</option>
+                                                <option value={""} name="false">No</option>
+                                            </Form.Control>
+                                            
+                                        </Form.Group>
+
+                                    <Form.Row>
+
+                                    </Form.Row>
+                                    <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Must First Complete These Scenarios</Form.Label>
+                                            <Select
+                                                onChange={scenarioListHandler}
+                                                isMulti
+                                                options={scenarioSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    </Form.Group>
 
                                     </Form.Row>
 

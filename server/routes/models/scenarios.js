@@ -5,6 +5,14 @@ const ScenarioSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    MUST_COMPLETE: {
+        type: Array,
+        required: true
+    },
+    IS_RAID: {
+        type: Boolean,
+        required: true
+    },
     IMAGE: {
         type: String,
         required: true

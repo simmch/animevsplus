@@ -268,7 +268,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         })
     }
 
-
     const passiveHandler = (e) => {
         if (e.target.type === "number"){
             setPassive({
@@ -464,6 +463,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             
         }
     }
+    
     var repelsHandler = (e) => {
         if(e != null){
             let value = e
