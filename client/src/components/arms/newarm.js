@@ -324,7 +324,10 @@ export const NewArm = ({auth, history, saveArm}) => {
                                     <Button type="submit">Create Arm</Button>
                                     <br />
                                     <br />
+                                    {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatearms"><Button variant="warning">Update Arm</Button></Link> 
+                                    : <span></span>
+                                    }
                                     <br/>
                                     <br />
                                     {submission_alert_dom}

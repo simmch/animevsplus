@@ -69,7 +69,8 @@ router.post("/new", async (req, res) => {
         REFERRED,
         REFERRER,
         TIMESTAMP,
-        IS_ADMIN
+        IS_ADMIN,
+        EDITOR
     } = req.body
     const userFields = {...req.body}
 
@@ -118,7 +119,8 @@ router.post("/update", async (req, res) => {
         REFERRED,
         REFERRER,
         TIMESTAMP,
-        IS_ADMIN
+        IS_ADMIN,
+        EDITOR
     } = req.body
     const userFields = {...req.body}
 

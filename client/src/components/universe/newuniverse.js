@@ -455,7 +455,10 @@ export const NewUniverse = ({auth, history, saveUniverse}) => {
                                     <Button type="submit">Create Universe</Button>
                                     <br />
                                     <br />
+                                    {auth.user.data.IS_ADMIN ?
                                     <Link to="/updateuniverse"><Button variant="warning">Update Universe</Button></Link> 
+                                    : <span></span>
+                                    }
                                     <br/>
                                     <br />
                                     {submission_alert_dom}

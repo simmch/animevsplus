@@ -89,6 +89,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    EDITOR: {
+        type: Array,
+        required: true,
+        default: false
     }
 });
 
