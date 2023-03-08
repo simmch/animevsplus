@@ -29,11 +29,12 @@ router.get("/:title", async (req, res) => {
 
     try {
         const scenario = await Scenario.findOne({ 'TITLE' : req.params.title });
-        res.json(scenario);
         if (!scenario) {
             return res
                 .status(400)
                 .json({ msg: "No scenarios were returned. " });
+        } else {
+            res.json(scenario);
         }
     } catch(err) {
         console.error(err.message);
@@ -45,15 +46,16 @@ router.get("/:title", async (req, res) => {
 // @route   GET crown/scenario/$title
 // @desc    Get scenario by title
 // @access  Public
-router.get("/:universe", async (req, res) => {
+router.get("/universe/:title", async (req, res) => {
 
     try {
-        const scenario = await Scenario.find({ 'UNIVERSE' : req.params.universe });
-        res.json(scenario);
+        const scenario = await Scenario.find({ 'UNIVERSE' : req.params.title });
         if (!scenario) {
             return res
                 .status(400)
                 .json({ msg: "No scenarios were returned. " });
+        } else {
+            res.json(scenario);
         }
     } catch(err) {
         console.error(err.message);

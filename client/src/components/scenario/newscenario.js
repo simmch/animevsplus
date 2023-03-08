@@ -103,16 +103,20 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                         ...data,
                         UNIVERSE: universe.TITLE,
                     })
+                    
                 axios.get(`/crown/arms/universe/${universe.TITLE}`)
                     .then((res) => {
                         setArm({arm: res.data, loading: false})
                     })
+
                 axios.get(`/crown/cards/universe/${universe.TITLE}`)
                     .then((res) => {
                         setCard({card: res.data, loading: false})
                     })
-                axios.get(`/crown/scenarios/${universe.TITLE}`)
+
+                axios.get(`/crown/scenarios/universe/${universe.TITLE}`)
                     .then((res) => {
+                        console.log(res.data)
                         setScenario({scenarios: res.data, loading: false})
                     })
     
