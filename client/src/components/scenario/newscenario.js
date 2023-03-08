@@ -54,11 +54,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                 .then((res) => {
                     setUniverse({universe: res.data, loading: false})
                 })
-
-            axios.get('/crown/scenarios')
-                .then((res) => {
-                    setScenario({scenarios: res.data, loading: false})
-                })
         }
     }, [auth])
 
@@ -115,6 +110,10 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                 axios.get(`/crown/cards/universe/${universe.TITLE}`)
                     .then((res) => {
                         setCard({card: res.data, loading: false})
+                    })
+                axios.get(`/crown/scenarios/${universe.TITLE}`)
+                    .then((res) => {
+                        setScenario({scenarios: res.data, loading: false})
                     })
     
                 }
