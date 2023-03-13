@@ -31,8 +31,11 @@ export const cardInitialState = {
     RESISTANT: [],
     REPEL: [],
     IMMUNE: [],
-    ABSORB: []
+    ABSORB: [],
+    CLASS: 'N/A',
+    IMAGE_PLUS: 'N/A',
 }
+
 
 export const armInitialState = {
     ARM: '',
@@ -118,6 +121,14 @@ export const petInitialState = {
     AVAILABLE: true,
     EXCLUSIVE: true
 }
+
+export const classes = [
+    'FIGHTER', // Starts each fight with 3 Parrys
+    'MAGE', // Increases elemental damage by 30%
+    'TANK', // Starts each fight with Rarity * 150 Shield
+    'RANGER', // Starts each fight with 3 barriers
+    'HEALER', // Stores 20% of damage taken and heals for the total amount each focus
+]
 
 export const enhancements = [
     'ATK',

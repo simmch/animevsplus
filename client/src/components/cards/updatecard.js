@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { cardInitialState, enhancements, elements } from '../STATE';
+import { cardInitialState, enhancements, elements, classes } from '../STATE';
 import { updateCard, deleteCard } from '../../actions/cards';
 import _ from 'lodash';
 
@@ -63,7 +63,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
     passive_Object[pass_key] = pass_power
     passive_Object["TYPE"] = pass_type
 
-    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, TOURNAMENT_REQUIREMENTS, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, COLLECTION, HAS_COLLECTION, STOCK, AVAILABLE, DESCRIPTIONS, EXCLUSIVE, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB} = data;
+    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, TOURNAMENT_REQUIREMENTS, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, COLLECTION, HAS_COLLECTION, STOCK, AVAILABLE, DESCRIPTIONS, EXCLUSIVE, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB, CLASS, IMAGE_PLUS} = data;
     const {MOVE1_ABILITY, MOVE1_POWER, MOVE1_ELEMENT, MOVE2_ABILITY, MOVE2_POWER, MOVE2_ELEMENT, MOVE3_ABILITY, MOVE3_POWER, MOVE3_ELEMENT, ENHANCER_ABILITY,ENHANCEMENT_TYPE, ENHANCER_POWER} = moves;
     if({...moves}){
         move1Object[MOVE1_ABILITY] = MOVE1_POWER
@@ -309,6 +309,18 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
         }
     })
 
+    
+    var classHandler = (e) => {
+        let value = e[0]
+        classes.map(c => {
+            if (e.value === c) {
+                setData({
+                    ...data,
+                    CLASS: c,
+                })
+            }
+        })
+    }
 
     var passiveEnhancementHandler = (e) => {
         let value = e[0]
@@ -507,13 +519,20 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                         RESISTANT: card.RESISTANT,
                         ABSORB: card.ABSORB,
                         IMMUNE: card.IMMUNE,
-                        WEAKNESS: card.WEAKNESS
-
+                        WEAKNESS: card.WEAKNESS,
+                        CLASS: card.CLASS,
+                        IMAGE_PLUS: card.IMAGE_PLUS,
                     })
                 }
             })
         }
     }
+
+    var classSelector = classes.map(c => {
+        return {
+            value: c, label: `${c}`
+        }
+    })
     
 
     var weaknessHandler = (e) => {
@@ -724,7 +743,19 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Performance Image</Form.Label>
+                                            <Form.Control
+                                                value={IMAGE_PLUS}
+                                                name="IMAGE_PLUS"
+                                                onChange={onChangeHandler}
+                                                required
+                                                type="text"
+
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="4" controlId="validationCustom04">
@@ -738,7 +769,19 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                        <Form.Label>Card Class</Form.Label>
+                                            <Select
+                                                onChange={classHandler}
+                                                options={
+                                                    classSelector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="6" controlId="validationCustom05">

@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { cardInitialState, enhancements, elements } from '../STATE'
+import { cardInitialState, enhancements, elements, classes } from '../STATE'
 import { saveCard } from '../../actions/cards'
 
 export const NewCard = ({auth, cards, history, saveCard}) => {
@@ -66,7 +66,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     var enhancerObject = {}
     var movesArray = []
 
-    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, TOURNAMENT_REQUIREMENTS, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, COLLECTION, HAS_COLLECTION, STOCK, AVAILABLE, DESCRIPTIONS, EXCLUSIVE, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB} = data;
+    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, TOURNAMENT_REQUIREMENTS, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, COLLECTION, HAS_COLLECTION, STOCK, AVAILABLE, DESCRIPTIONS, EXCLUSIVE, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB, CLASS, IMAGE_PLUS} = data;
     const {MOVE1_ABILITY, MOVE1_POWER, MOVE1_ELEMENT, MOVE2_ABILITY, MOVE2_POWER, MOVE2_ELEMENT, MOVE3_ABILITY, MOVE3_POWER, MOVE3_ELEMENT, ENHANCER_ABILITY,ENHANCEMENT_TYPE, ENHANCER_POWER} = moves;
     if({...moves}){
         move1Object[MOVE1_ABILITY] = MOVE1_POWER
@@ -368,6 +368,25 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         }
     })
 
+    var classSelector = classes.map(classType => {
+        return {
+            value: classType, label: `${classType}`
+        }
+    })
+
+
+    var classHandler = (e) => {
+        let value = e[0]
+        classes.map(c => {
+            if (e.value === c) {
+                setData({
+                    ...data,
+                    CLASS: c,
+                })
+            }
+        })
+    }
+
     var passiveEnhancementHandler = (e) => {
         let value = e[0]
         enhancements.map(enhancement => {
@@ -628,6 +647,20 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Performance Image</Form.Label>
+                                            <Form.Control
+                                                value={IMAGE_PLUS}
+                                                name="IMAGE_PLUS"
+                                                onChange={onChangeHandler}
+                                                required
+                                                type="text"
+
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                            
+
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Ultimate GIF</Form.Label>
                                             <Form.Control
                                                 value={GIF}
@@ -666,6 +699,21 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
+
+                                        
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                        <Form.Label>Card Class</Form.Label>
+                                            <Select
+                                                onChange={classHandler}
+                                                options={
+                                                    classSelector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label>Tier</Form.Label>
                                             <Form.Control
@@ -677,7 +725,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
@@ -803,9 +850,9 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                                 styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
-                                        
+
+
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label> Has Destiny </Form.Label>
                                             <Col sm={10}>
