@@ -130,7 +130,15 @@ const CardSchema = new mongoose.Schema({
     ABSORB: {
         type: Array,
         required: true
-    }
+    },
+    CLASS: {
+        type: String,
+        required: true
+    },
+    IMAGE_PLUS: {
+        type: String,
+        required: true
+    },
 
 });
 
