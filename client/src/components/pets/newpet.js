@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { petInitialState, enhancements } from '../STATE'
+import { petInitialState, enhancements, elements } from '../STATE'
 import { savePet } from '../../actions/pets'
 
 export const NewPet = ({auth, pets, history, savePet}) => {
@@ -127,19 +127,19 @@ export const NewPet = ({auth, pets, history, savePet}) => {
         }
     }
 
-    var enhancementSelector = enhancements.map(enhancement => {
+    var elementSelector = elements.map(element => {
         return {
-            value: enhancement, label: `${enhancement}`
+            value: element, label: `${element}`
         }
     })
 
-    var abilityEnhancementHandler = (e) => {
+    var abilityElementHandler = (e) => {
         let value = e[0]
-        enhancements.map(enhancement => {
-            if (e.value === enhancement) {
+        elements.map(element => {
+            if (e.value === element) {
                 setAbility({
                     ...ability,
-                    ABILITY_TYPE: enhancement,
+                    ABILITY_TYPE: element,
                 })
             }
         })
@@ -249,7 +249,7 @@ export const NewPet = ({auth, pets, history, savePet}) => {
                                                 
                                         </Form.Group>
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                            <Form.Label>Ability Power</Form.Label>
+                                            <Form.Label>Starting Ability Power</Form.Label>
                                             <Form.Control
                                                 value={ability.POWER}
                                                 name="POWER"
@@ -262,11 +262,11 @@ export const NewPet = ({auth, pets, history, savePet}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Type</Form.Label>
+                                        <Form.Label>Element</Form.Label>
                                             <Select
-                                                onChange={abilityEnhancementHandler}
+                                                onChange={abilityElementHandler}
                                                 options={
-                                                    enhancementSelector
+                                                    elementSelector
                                                 }
                                                 required
                                                 styles={styleSheet}

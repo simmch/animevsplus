@@ -129,6 +129,9 @@ export const classes = [
     'RANGER', // Starts each fight with 3 barriers
     'HEALER', // Stores 20% of damage taken and heals for the total amount each focus
     'ASSASSIN', // First 3 attacks cost no stamina
+    'SUMMONER', // Can user summon from start of the match
+    'SWORDSMEN', // At resolve gain 3 critical strikes
+    'MONSTROSITY', // On resolve gain 2 Double Strikes
 ]
 
 export const enhancements = [
