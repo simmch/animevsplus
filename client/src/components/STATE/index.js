@@ -128,6 +128,7 @@ export const classes = [
     'TANK', // Starts each fight with Rarity * 150 Shield
     'RANGER', // Starts each fight with 3 barriers
     'HEALER', // Stores 20% of damage taken and heals for the total amount each focus
+    'ASSASSIN',
 ]
 
 export const enhancements = [
