@@ -125,12 +125,12 @@ export const petInitialState = {
 export const classes = [
     'FIGHTER', // Starts each fight with 3 Parrys
     'MAGE', // Increases elemental damage by 30%
-    'TANK', // Starts each fight with Rarity * 150 Shield
+    'TANK', // Starts each fight with Rarity * 200 Shield
     'RANGER', // Starts each fight with 3 barriers
     'HEALER', // Stores 20% of damage taken and heals for the total amount each focus
     'ASSASSIN', // First 3 attacks cost no stamina
     'SUMMONER', // Can user summon from start of the match
-    'SWORDSMAN', // At resolve gain 3 critical strikes
+    'SWORDSMEN', // At resolve gain 3 critical strikes
     'MONSTROSITY', // On resolve gain 2 Double Strikes
 ]
 
