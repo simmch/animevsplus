@@ -181,7 +181,10 @@ export const elements = [
     "BLEED",
     "TIME",
     "GRAVITY",
-    "RECOIL"
+    "RECOIL",
+    "BARRIER",
+    "PARRY",
+    "SHIELD"
 ]
 
 export const arm_enhancements = [
