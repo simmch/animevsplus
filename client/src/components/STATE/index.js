@@ -46,7 +46,8 @@ export const armInitialState = {
     COLLECTION: 'N/A',
     STOCK: 99,
     AVAILABLE: true,
-    EXCLUSIVE: true
+    EXCLUSIVE: true,
+    ELEMENT: ""
 }
 
 export const universeInitialState = {
