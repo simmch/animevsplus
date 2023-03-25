@@ -3,23 +3,23 @@ const mongoose = require("mongoose");
 const ArmSchema = new mongoose.Schema({
     ARM: {
         type: String,
-        required: true
+        required: false
     },
     PRICE: {
         type: Number,
-        required: true
+        required: false
     },
     ABILITIES: {
         type: Array,
-        required: true
+        required: false
     },
     UNIVERSE: {
         type: String,
-        required: true
+        required: false
     },
     COLLECTION: {
         type: String,
-        required: true
+        required: false
     },
     TIMESTAMP: {
         type: Date,
@@ -27,23 +27,23 @@ const ArmSchema = new mongoose.Schema({
     },
     STOCK: {
         type: Number,
-        required: true
+        required: false
     },
     TOURNAMENT_REQUIREMENTS: {
         type: Number,
-        required: true
+        required: false
     },
     AVAILABLE: {
         type: Boolean,
-        required: true
+        required: false
     },
     EXCLUSIVE: {
         type: Boolean,
-        required: true
+        required: false
     },
     ELEMENT: {
         type: String,
-        required: true
+        required: false
     }
 });
 
