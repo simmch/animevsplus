@@ -3,48 +3,40 @@ const mongoose = require("mongoose");
 const ArmSchema = new mongoose.Schema({
     ARM: {
         type: String,
-        required: true
+        required: false
     },
     PRICE: {
         type: Number,
-        required: true
+        required: false
     },
     ABILITIES: {
         type: Array,
-        required: true
+        required: false
     },
     UNIVERSE: {
         type: String,
-        required: true
-    },
-    COLLECTION: {
-        type: String,
-        required: true
+        required: false
     },
     TIMESTAMP: {
         type: Date,
         default: Date.now
     },
-    STOCK: {
-        type: Number,
-        required: true
-    },
-    TOURNAMENT_REQUIREMENTS: {
-        type: Number,
-        required: true
-    },
     AVAILABLE: {
         type: Boolean,
-        required: true
-    },
-    EXCLUSIVE: {
-        type: Boolean,
-        required: true
+        required: false
     },
     ELEMENT: {
         type: String,
-        required: true
-    }
+        required: false
+    }, 
+    DROP_STYLE: {
+        type: String,
+        required: false
+    },
+    ID: {
+        type: String,
+        required: false
+    },
 });
 
 const collection = "ARM"

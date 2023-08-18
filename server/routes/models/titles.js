@@ -3,39 +3,35 @@ const mongoose = require("mongoose");
 const TitleSchema = new mongoose.Schema({
     TITLE: {
         type: String,
-        required: true
-    },
-    PRICE: {
-        type: Number,
-        required: true
+        required: false
     },
     ABILITIES: {
         type: Array,
-        required: true
+        required: false
     },
     UNIVERSE: {
         type: String,
-        required: true
+        required: false
     },
     TIMESTAMP: {
         type: Date,
         default: Date.now
     },
-    STOCK: {
-        type: Number,
-        required: true
-    },
-    TOURNAMENT_REQUIREMENTS: {
-        type: Number,
-        required: true
-    },
     AVAILABLE: {
         type: Boolean,
-        required: true
+        required: false
     },
-    EXCLUSIVE: {
-        type: Boolean,
-        required: true
+    RARITY: {
+        type: String,
+        required: false
+    },
+    UNLOCK_METHOD: {
+        type: Object,
+        required: false
+    },
+    ID: {
+        type: String,
+        required: false
     }
 });
 

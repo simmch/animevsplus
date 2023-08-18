@@ -22,6 +22,20 @@ router.get("/", async (req, res) => {
     }
 })
 
+router.get("/names/:universe", async (req, res) => {
+    try {
+        const { universe } = req.params;
+        const arms = await Arm.find({ UNIVERSE: universe }, "ARM");
+        if (!arms) {
+            return res.status(400).json({ msg: `No arms were found for universe '${universe}'` });
+        }
+        res.json(arms.map(arm => arm.ARM));
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.");
+    }
+});
+
 // @route   GET crown/arms/$arm
 // @desc    Get Arm by name
 // @access  Public
@@ -88,14 +102,12 @@ router.post("/new", async (req, res) => {
         ARM,
         PRICE,
         ABILITIES,
-        COLLECTION,
-        STOCK,
         UNIVERSE,
-        TOURNAMENT_REQUIREMENTS,
         TIMESTAMP,
         AVAILABLE,
-        EXCLUSIVE,
-        ELEMENT
+        ELEMENT,
+        DROP_STYLE,
+        ID
     } = req.body
     const armFields = {...req.body}
 
@@ -125,14 +137,12 @@ router.post("/update", async (req, res) => {
         ARM,
         PRICE,
         ABILITIES,
-        COLLECTION,
-        STOCK,
         UNIVERSE,
-        TOURNAMENT_REQUIREMENTS,
         TIMESTAMP,
         AVAILABLE,
-        EXCLUSIVE,
-        ELEMENT
+        ELEMENT,
+        DROP_STYLE,
+        ID
     } = req.body
     const armFields = {...req.body}
 

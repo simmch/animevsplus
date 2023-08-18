@@ -22,6 +22,21 @@ router.get("/", async (req, res) => {
     }
 })
 
+
+router.get("/names/:universe", async (req, res) => {
+    try {
+        const { universe } = req.params;
+        const titles = await Title.find({ UNIVERSE: universe }, "TITLE");
+        if (!titles) {
+            return res.status(400).json({ msg: `No titles were found for universe '${universe}'` });
+        }
+        res.json(titles.map(title => title.TITLE));
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.");
+    }
+});
+
 // @route   GET crown/titles/$title
 // @desc    Get Titles by Title
 // @access  Public
@@ -67,14 +82,13 @@ router.post("/new", async (req, res) => {
 
     const {
         TITLE,
-        PRICE,
         ABILITIES,
-        STOCK,
         UNIVERSE,
         TIMESTAMP,
-        TOURNAMENT_REQUIREMENTS,
         AVAILABLE,
-        EXCLUSIVE
+        RARITY,
+        UNLOCK_METHOD,
+        ID
     } = req.body
     const titleFields = {...req.body}
 
@@ -102,14 +116,13 @@ router.post("/update", async (req, res) => {
  
     const {
         TITLE,
-        PRICE,
         ABILITIES,
-        STOCK,
         UNIVERSE,
-        TOURNAMENT_REQUIREMENTS,
         TIMESTAMP,
         AVAILABLE,
-        EXCLUSIVE
+        RARITY,
+        UNLOCK_METHOD,
+        ID
     } = req.body
     const titleFields = {...req.body}
 

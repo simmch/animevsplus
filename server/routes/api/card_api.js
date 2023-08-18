@@ -22,6 +22,21 @@ router.get("/", async (req, res) => {
     }
 })
 
+
+router.get("/names/:universe", async (req, res) => {
+    try {
+        const { universe } = req.params;
+        const cards = await Card.find({ UNIVERSE: universe }, "NAME TIER");
+        if (!cards) {
+            return res.status(400).json({ msg: `No cards were found for universe '${universe}'` });
+        }
+        res.json(cards.map(card => `${card.NAME} - ${card.TIER.toString()}`));
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.");
+    }
+});
+
 // @route   GET crown/cards/$name
 // @desc    Get cards by name
 // @access  Public
@@ -79,13 +94,9 @@ router.post("/new", auth, async (req, res) => {
         TIER,
         VUL,
         TYPE,
-        COLLECTION,
-        HAS_COLLECTION,
         UNIVERSE,
         TIMESTAMP,
-        STOCK,
         AVAILABLE,
-        EXCLUSIVE,
         DESCRIPTIONS,
         IS_SKIN,
         SKIN_FOR,
@@ -95,7 +106,8 @@ router.post("/new", auth, async (req, res) => {
         IMMUNE,
         ABSORB,
         CLASS,
-        IMAGE_PLUS
+        DROP_STYLE, 
+        ID
     } = req.body
     const cardFields = { ...req.body }
     try {
@@ -138,13 +150,9 @@ router.post("/update", auth, async (req, res) => {
         TIER,
         VUL,
         TYPE,
-        COLLECTION,
-        HAS_COLLECTION,
         UNIVERSE,
         TIMESTAMP,
-        STOCK,
         AVAILABLE,
-        EXCLUSIVE,
         DESCRIPTIONS,
         IS_SKIN,
         SKIN_FOR,
@@ -154,8 +162,8 @@ router.post("/update", auth, async (req, res) => {
         IMMUNE,
         ABSORB,
         CLASS,
-        IMAGE_PLUS
-
+        DROP_STYLE, 
+        ID
     } = req.body
     const cardFields = { ...req.body }
 
@@ -190,13 +198,9 @@ router.delete("/delete", auth, async (req, res) => {
         TIER,
         VUL,
         TYPE,
-        COLLECTION,
-        HAS_COLLECTION,
         UNIVERSE,
         TIMESTAMP,
-        STOCK,
         AVAILABLE,
-        EXCLUSIVE,
         DESCRIPTIONS,
         IS_SKIN,
         SKIN_FOR,
@@ -205,8 +209,9 @@ router.delete("/delete", auth, async (req, res) => {
         REPEL,
         IMMUNE,
         ABSORB,
-        CLASS, 
-        IMAGE_PLUS
+        CLASS,
+        DROP_STYLE, 
+        ID
     } = req.body
     const cardFields = { ...req.body }
     try {

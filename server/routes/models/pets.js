@@ -21,10 +21,6 @@ const PetSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
-    COLLECTION: {
-        type: String,
-        required: true
-    },
     TIMESTAMP: {
         type: Date,
         default: Date.now
@@ -33,10 +29,11 @@ const PetSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    EXCLUSIVE: {
+    DROP_STYLE: {
         type: Boolean,
         required: true
-    }
+    },
+    
 });
 
 const collection = "PET"

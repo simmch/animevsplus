@@ -71,10 +71,9 @@ router.post("/new", async (req, res) => {
         UNIVERSE,
         LVL,
         ABILITIES,
-        COLLECTION,
         TIMESTAMP,
         AVAILABLE,
-        EXCLUSIVE
+        DROP_STYLE
     } = req.body
     const petFields = {...req.body}
 
@@ -103,13 +102,12 @@ router.post("/update", async (req, res) => {
     const {
         PET,
         PATH,
-        ABILITIES,
-        LVL,
         UNIVERSE,
-        COLLECTION,
+        LVL,
+        ABILITIES,
         TIMESTAMP,
         AVAILABLE,
-        EXCLUSIVE
+        DROP_STYLE
     } = req.body
     const petFields = {...req.body}
 

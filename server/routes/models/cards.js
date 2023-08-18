@@ -3,65 +3,65 @@ const mongoose = require("mongoose");
 const CardSchema = new mongoose.Schema({
     NAME: {
         type: String,
-        required: true
+        required: false
     },
 
     RNAME: {
         type: String,
-        required: true
+        required: false
     },
     PATH: {
         type: String,
-        required: true
+        required: false
     },
     FPATH: {
         type: String,
-        required: true
+        required: false
     },
 
     RPATH: {
         type: String,
-        required: true
+        required: false
     },
     GIF: {
         type: String,
-        required: true
+        required: false
     },
     PRICE: {
         type: Number,
-        required: true
+        required: false
     },
     MOVESET: {
         type: Array,
-        required: true
+        required: false
     },
     PASS: {
         type: Array,
-        required: true
+        required: false
     },
     HLT: {
         type: Number,
-        required: true
+        required: false
     },
     STAM: {
         type: Number,
-        required: true
+        required: false
     },
     ATK: {
         type: Number,
-        required: true
+        required: false
     },
     DEF: {
         type: Number,
-        required: true
+        required: false
     },
     SPD:{
         type: Number,
-        required: true
+        required: false
     },
     TIER:{
         type: Number,
-        required: true
+        required: false
     },
     TYPE:{
         type: Number,
@@ -69,75 +69,63 @@ const CardSchema = new mongoose.Schema({
     },
     VUL: {
         type: Boolean,
-        required: true
-    },
-    COLLECTION: {
-        type: String,
-        required: true
-    },
-    HAS_COLLECTION: {
-        type: Boolean,
-        required: true
+        required: false
     },
     UNIVERSE: {
         type: String,
-        required: true
+        required: false
     },
     TIMESTAMP: {
         type: Date,
         default: Date.now
     },
-    STOCK: {
-        type: Number,
-        required: true
-    },
     AVAILABLE: {
         type: Boolean,
-        required: true
-    },
-    EXCLUSIVE: {
-        type: Boolean,
-        required: true
+        required: false
     },
     DESCRIPTIONS: {
         type: Array,
-        required: true
+        required: false
     },
     IS_SKIN: {
         type: Boolean,
-        required: true
+        required: false
     },
     SKIN_FOR: {
         type: String,
-        required: true
+        required: false
     },
     WEAKNESS : {
         type: Array,
-        required: true
+        required: false
     },
     RESISTANT: {
         type: Array,
-        required: true
+        required: false
     },
     REPEL: {
         type: Array,
-        required: true
+        required: false
     },
     IMMUNE: {
         type: Array,
-        required: true
+        required: false
     },
     ABSORB: {
         type: Array,
-        required: true
+        required: false
     },
     CLASS: {
         type: String,
-        required: true
+        required: false
     },
-    IMAGE_PLUS: {
+    DROP_STYLE: {
         type: String,
-        required: true
+        required: false
+    },
+    ID: {
+        type: String,
+        required: false
     },
 
 });

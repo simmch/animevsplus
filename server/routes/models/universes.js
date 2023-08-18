@@ -30,24 +30,6 @@ const UniverseSchema = new mongoose.Schema({
     HAS_DUNGEON: {
         type: Boolean,
     },
-    UTITLE: {
-        type: String,
-    },
-    UARM: {
-        type: String,
-    },
-    DTITLE: {
-        type: String,
-    },
-    DARM: {
-        type: String,
-    },
-    UPET: {
-        type: String,
-    },
-    DPET: {
-        type: String,
-    },
     GUILD: {
         type: String,
     },

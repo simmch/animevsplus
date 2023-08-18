@@ -41,6 +41,25 @@ router.get("/:disname", async (req, res) => {
     }
 })
 
+// @route   GET crown/users/$did
+// @desc    Get users by name
+// @access  Public
+router.get("/did/:did", async (req, res) => {
+
+    try {
+        const users = await User.findOne({ 'DID' : req.params.did });
+        res.json(users);
+        if (!users) {
+            return res
+                .status(400)
+                .json({ msg: "No users were returned. " });
+        }
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.")
+    }
+})
+
 // @route   POST crown/users/new
 // @desc    Create new user
 // @access  Public

@@ -49,6 +49,7 @@ app.use("/crown/universes", require("./routes/api/universes_api.js"))
 app.use("/crown/scenarios", require("./routes/api/scenario_api.js"))
 app.use("/crown/abyss", require("./routes/api/abyss_api.js"))
 app.use("/crown/bosses", require("./routes/api/bosses_api.js"))
+app.use("/crown/ai", require("./routes/api/gpt.js"))
 app.use('/auth', require('./routes/api/auth_api'))
 
 app.use("/pcg/teams", require("./routes/api/teams_api.js"))

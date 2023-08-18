@@ -3,48 +3,65 @@ const mongoose = require("mongoose");
 const ScenarioSchema = new mongoose.Schema({
     TITLE: {
         type: String,
-        required: true
+        required: false
     },
     MUST_COMPLETE: {
         type: Array,
-        required: true
+        required: false
     },
     IS_RAID: {
         type: Boolean,
-        required: true
+        required: false
+    },
+    IS_DESTINY: {
+        type: Boolean,
+        required: false
     },
     IMAGE: {
         type: String,
-        required: true
+        required: false
     },
     ENEMY_LEVEL: {
         type: Number,
-        required: true
+        required: false
     },
     ENEMIES: {
         type: Array,
-        required: true
+        required: false
     },
     EASY_DROPS: {
         type: Array,
-        required: true
+        required: false
     },
     NORMAL_DROPS: {
         type: Array,
-        required: true
+        required: false
     },
     HARD_DROPS: {
         type: Array,
-        required: true
+        required: false
     },
     UNIVERSE: {
         type: String,
-        required: true
+        required: false
     },
     AVAILABLE: {
         type: Boolean,
-        required: true
-    }
+        required: false
+    },
+    TACTICS: {
+        type: Array,
+        required: false
+    },
+    DESTINY_CARDS: {
+        type: Array,
+        required: false
+    },
+    LOCATIONS: {
+        type: Array,
+        required: false
+    },
+    
 });
 
 const collection = "SCENARIO"

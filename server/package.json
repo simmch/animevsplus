@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "local": "cd ../client && npm run build",
     "start": "nodemon server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "stage": "npm run local && npm run dev"
   },
   "author": "pcg",
   "license": "MIT",
@@ -21,6 +22,7 @@
     "express-session": "^1.17.2",
     "gravatar": "^1.8.1",
     "mongoose": "^5.13.2",
+    "openai": "^4.0.0",
     "passport": "^0.4.1",
     "passport-discord": "^0.1.4",
     "request": "^2.88.2"
