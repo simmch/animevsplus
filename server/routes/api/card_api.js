@@ -71,6 +71,24 @@ router.get("/universe/:universe", auth, async (req, res) => {
     }
 })
 
+// @route   GET crown/cards/$universe
+// @desc    Get cards by universe listed by name
+// @access  Public
+router.get("/universe/list/:universe", async (req, res) => {
+    try {
+        const cards = await Card.find({ 'UNIVERSE': req.params.universe });
+        if (!cards) {
+            res.status(400).send("Card not found.")
+        } else {
+            const cardNames = cards.map(card => card.NAME);
+            res.json(cardNames);
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.")
+    }
+})
+
 // @route   POST crown/cards/new
 // @desc    Create new card
 // @access  Public

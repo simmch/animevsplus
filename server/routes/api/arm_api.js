@@ -100,7 +100,6 @@ router.post("/new", async (req, res) => {
 
     const {
         ARM,
-        PRICE,
         ABILITIES,
         UNIVERSE,
         TIMESTAMP,
@@ -135,7 +134,6 @@ router.post("/update", async (req, res) => {
  
     const {
         ARM,
-        PRICE,
         ABILITIES,
         UNIVERSE,
         TIMESTAMP,

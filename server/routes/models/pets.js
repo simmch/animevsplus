@@ -13,10 +13,6 @@ const PetSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    LVL: {
-        type: Number,
-        required: true
-    },
     ABILITIES: {
         type: Array,
         required: true
