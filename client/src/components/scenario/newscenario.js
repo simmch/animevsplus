@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { scenarioInitialState } from '../STATE'
+import { scenarioInitialState, tactics } from '../STATE'
 import { saveScenario } from '../../actions/scenarios'
 
 export const NewScenario = ({auth, history, saveScenario}) => {
@@ -45,7 +45,10 @@ export const NewScenario = ({auth, history, saveScenario}) => {
         NORMAL_DROPS,
         HARD_DROPS,
         UNIVERSE,
-        AVAILABLE
+        AVAILABLE,
+        DESTINY_CARDS,
+        TACTICS,
+        IS_DESTINY
     } = data;
 
     useEffect(() => {
@@ -58,35 +61,21 @@ export const NewScenario = ({auth, history, saveScenario}) => {
     }, [auth])
 
     const onChangeHandler = (e) => {
-        setShow(false)
-        if (e.target.type === "number"){
-            setData({
-                ...data,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } else {
-            setData({
-                ...data,
-                [e.target.name]: e.target.value
-            })
+        setShow(false);
+    
+        let value = e.target.value;
+    
+        if (e.target.type === "number") {
+            value = e.target.valueAsNumber;
+        } else if (e.target.name === "AVAILABLE" || e.target.name === "IS_RAID" || e.target.name === "IS_DESTINY") {
+            value = Boolean(e.target.value);
         }
-        
+    
+        setData(prevData => ({
+            ...prevData,
+            [e.target.name]: value
+        }));
     }
-
-    const availableHandler = (e) => {
-        setData({
-            ...data,
-            AVAILABLE: Boolean(e.target.value)
-        })
-    }
-
-    const isRaidHandler = (e) => {
-        setData({
-            ...data,
-            IS_RAID: Boolean(e.target.value)
-        })
-    }
-
 
     if(!universes.loading) {
         var universeSelector = universes.universe.map(universe => {
@@ -218,6 +207,26 @@ export const NewScenario = ({auth, history, saveScenario}) => {
             }
         }
 
+        var destinyCardHandler = (e) => {
+            if(e != null){
+                let value = e
+                const destinyCardList = [];
+                for(const e of value){
+                    if(!data.DESTINY_CARDS.includes(e)){
+                        destinyCardList.push(e.value)
+                    }
+                }
+                if(destinyCardList){
+                    setData({
+                        ...data,
+                        DESTINY_CARDS: destinyCardList,
+                        IS_DESTINY: true
+                    })
+                }
+                
+            }
+        }
+
         var bannedCardsHandler = (e) => {
             if(e != null){
                 let value = e
@@ -265,6 +274,25 @@ export const NewScenario = ({auth, history, saveScenario}) => {
         })
     }
 
+
+    var tacticsHandler = (e) => {
+        let value = e[0]
+        tactics.map(tactic => {
+            if (e.value === tactic) {
+                setData({
+                    ...data,
+                    TACTICS: tactic,
+                })
+            }
+        })
+    };
+
+    var tacticsSelector = tactics.map(tactic => {
+        return {
+            value: tactic, label: `${tactic}`
+        }
+    });
+
     console.log(data)
     var submission_response = "Success!";
     var submission_alert_dom = <Alert show={show} variant="success"> {submission_response} </Alert>
@@ -301,7 +329,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
             <div>
                 <div className="page-header">
                     <h3 className="page-title">
-                        New Crown Unlimited Arm
+                        New Arm
                     </h3>
                 </div>
                 <div className="row">
@@ -396,7 +424,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
- 
+
                                     </Form.Row>
 
                                     <Form.Row>
@@ -412,7 +440,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
- 
                                     </Form.Row>
 
                                     <Form.Row>
@@ -444,7 +471,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
- 
                                     </Form.Row>
 
                                     <Form.Row>
@@ -460,7 +486,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
- 
                                     </Form.Row>
 
                                     <Form.Row>
@@ -476,37 +501,76 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
- 
                                     </Form.Row>
 
                                     <Form.Row>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
                                             
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
-                                                onChange={availableHandler}
+                                                onChange={onChangeHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
                                             
                                         </Form.Group>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label> Is Raid? </Form.Label>
                                             
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
-                                                onChange={isRaidHandler}
+                                                onChange={onChangeHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
-                                            
                                         </Form.Group>
 
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label> Is Destiny? </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={onChangeHandler}
+                                            >
+                                                <option value={true} name="true">Yes</option>
+                                                <option value={""} name="false">No</option>
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Destiny Cards</Form.Label>
+                                            <Select
+                                                onChange={destinyCardHandler}
+                                                isMulti
+                                                options={cardSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Raid Tactics</Form.Label>
+                                            <Select
+                                                onChange={tacticsHandler}
+                                                isMulti
+                                                options={tacticsSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
                                     </Form.Row>
 
                                     <Form.Row>

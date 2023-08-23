@@ -6,25 +6,20 @@ export const cardInitialState = {
     GIF: 'N/A',
     NAME: '',
     RNAME: 'N/A',
-    PRICE: null,
-    TOURNAMENT_REQUIREMENTS: 0,
+    PRICE: 0,
     MOVESET: {},
     HLT: null,
     STAM: 100,
-    ATK: 0,
-    DEF: 0,
+    ATK: null,
+    DEF: null,
     TYPE: 0,
-    TIER: 1,
+    TIER: null,
     PASS: [],
-    SPD: 50,
+    SPD: null,
     VUL: false,
     UNIVERSE: '',
-    COLLECTION: 'N/A',
-    HAS_COLLECTION: null,
-    STOCK: 99,
     AVAILABLE: true,
     DESCRIPTIONS: [],
-    EXCLUSIVE: true,
     IS_SKIN: false,
     SKIN_FOR: 'N/A',
     WEAKNESS: [],
@@ -33,20 +28,30 @@ export const cardInitialState = {
     IMMUNE: [],
     ABSORB: [],
     CLASS: 'N/A',
-    IMAGE_PLUS: 'N/A',
+    DROP_STYLE: '',
+    ID: '',
 }
 
 
 export const armInitialState = {
     ARM: '',
-    PRICE: null,
-    TOURNAMENT_REQUIREMENTS: 0,
+    PRICE: 0,
     ABILITIES: [],
     UNIVERSE: '',
-    COLLECTION: 'N/A',
-    STOCK: 99,
     AVAILABLE: true,
-    EXCLUSIVE: true
+    DROP_STYLE: '',
+    ID: '',
+    ELEMENT: '',
+}
+
+export const titleInitialState = {
+    TITLE: '',
+    ABILITIES: [],
+    UNIVERSE: '',
+    AVAILABLE: true,
+    RARITY: '',
+    UNLOCK_METHOD: {},
+    ID: '',
 }
 
 export const universeInitialState = {
@@ -81,7 +86,11 @@ export const scenarioInitialState = {
     NORMAL_DROPS: [],
     HARD_DROPS: [],
     UNIVERSE: '',
-    AVAILABLE: true
+    AVAILABLE: true,
+    DESTINY_CARDS: [],
+    LOCATIONS: [],
+    TACTICS: [],
+    IS_DESTINY: false,
 }
 
 export const abyssInitialState = {
@@ -99,28 +108,106 @@ export const abyssInitialState = {
     SPECIAL_BUFF: 0
 }
 
-export const titleInitialState = {
-    TITLE: '',
-    PRICE: null,
-    TOURNAMENT_REQUIREMENTS: 0,
-    ABILITIES: [],
-    UNIVERSE: '',
-    COLLECTION: 'N/A',
-    STOCK: 99,
-    AVAILABLE: true,
-    EXCLUSIVE: true
-}
-
 export const petInitialState = {
     PET: '',
     PATH: '',
     UNIVERSE: '',
-    LVL: 1,
     ABILITIES: [],
-    COLLECTION: 'N/A',
     AVAILABLE: true,
-    EXCLUSIVE: true
+    DROP_STYLE: ''
 }
+
+export const tactics = [
+    'ENRAGE',
+    'OVERWHELMING POWER',
+    'DAMAGE CHECK',
+    'DEVASTATING BLOW',
+    'DEATH BLOW',
+    'ALMIGHTY WILL',
+    'STAGGER',
+    'PROVOKED',
+    'INTIMIDATION',
+    'PETRIFIED FEAR',
+    'BLOODLUST'
+]
+
+// Unlock Methods
+// # Tales completed {TYPE: "TALES", "VALUE": "1"}
+// # Dungeons completed {TYPE: "DUNGEONS", "VALUE": "1"}
+// # Scenarios completed {TYPE: "SCENARIOS", "VALUE": "1"}
+// # Specific Element Damage Dealt in universe {TYPE: "ELEMENT", "VALUE": "100"}
+// # Total Damage Dealt in universe {TYPE: "TOTAL_DAMAGE", "VALUE": "100"}
+// # Bosses beat in universe {TYPE: "BOSS", "VALUE": "1"}
+// # None / Picked from scenario window
+// {TYPE: "", "VALUE": ""}
+export const unlock_methods = [
+    'TALES COMPLETED',
+    'TALES RUN',
+    'HEALED IN TALES',
+    'DAMAGE TAKEN IN TALES',
+    'DAMAGE DEALT IN TALES',
+    'DUNGEONS COMPLETED',
+    'DUNGEONS RUN',
+    'HEALED IN DUNGEONS',
+    'DAMAGE TAKEN IN DUNGEONS',
+    'DAMAGE DEALT IN DUNGEONS',
+    'BOSSES COMPLETED',
+    'BOSSES RUN',
+    'HEALED IN BOSSES',
+    'DAMAGE TAKEN IN BOSSES',
+    'DAMAGE DEALT IN BOSSES',
+    'ELEMENTAL DAMAGE DEALT',
+]
+
+export const title_abilities = [
+    'ATK',
+    'DEF',
+    'STAM',
+    'HLT',
+    'LIFE',
+    'DRAIN',
+    'FLOG',
+    'WITHER',
+    'RAGE',
+    'BRACE',
+    'BZRK',
+    'CRYSTAL',
+    'GROWTH',
+    'FEAR',
+    'STANCE',
+    'CONFUSE',
+    'CREATION',
+    'DESTRUCTION',
+    'SPEED',
+    'SLOW',
+    'HASTE',
+    'SOULCHAIN',
+    'GAMBLE',
+    'SINGULARITY',
+    'IQ',
+    'HIGH IQ',
+    'BLITZ',
+    'FORESIGHT',
+    'OBLITERATE',
+    'IMPENETRABLE SHIELD',
+    'PIERCE',
+    'SYNTHESIS',
+    'SPELL SHIELD',
+    'ELEMENTAL BUFF',
+    'ELEMENTAL DEBUFF',
+    'ENHANCED GUARD',
+    'STRATEGIST',
+    'SHARPSHOOTER',
+    'DIVINITY',
+]
+
+export const drop_styles = [
+    "TALES",
+    "DUNGEON",
+    "SCENARIO",
+    "BOSS",
+    "RAID"
+]
 
 export const classes = [
     'FIGHTER', // Starts each fight with 3 Parrys
@@ -177,11 +264,11 @@ export const elements = [
     "DARK",
     "POISON",
     "RANGED",
-    "SPIRIT",
+    "ENERGY",
     "BLEED",
     "TIME",
     "GRAVITY",
-    "RECOIL",
+    "RECKLESS",
     "BARRIER",
     "PARRY",
     "SHIELD"

@@ -3,7 +3,8 @@ import {
     GET_CARD,
     ADD_CARD,
     DELETE_CARD,
-    UPDATE_CARD
+    UPDATE_CARD,
+    GET_CARD_AI_INFO,
 } from '../actiontypes/index';
 
 const initialState = {
@@ -19,6 +20,8 @@ export default function (state = initialState, action) {
         case GET_ALL_CARDS:
             return { ...state, cards: payload, loading: false, isAuthenticated: true }
         case GET_CARD:
+            return { ...state, cards: payload, loading: false, isAuthenticated: true }
+        case GET_CARD_AI_INFO:
             return { ...state, cards: payload, loading: false, isAuthenticated: true }
         case ADD_CARD:
             return { ...state, alert: payload }

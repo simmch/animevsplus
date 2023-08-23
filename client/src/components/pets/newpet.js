@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { petInitialState, enhancements, elements } from '../STATE'
+import { petInitialState, enhancements, elements, drop_styles } from '../STATE'
 import { savePet } from '../../actions/pets'
 
 export const NewPet = ({auth, pets, history, savePet}) => {
@@ -36,11 +36,10 @@ export const NewPet = ({auth, pets, history, savePet}) => {
         PET,
         PATH,
         UNIVERSE,
-        LVL,
         ABILITIES,
-        COLLECTION,
         AVAILABLE,
-        EXCLUSIVE} = data;
+        DROP_STYLE
+    } = data;
 
     
     useEffect(() => {
@@ -85,13 +84,6 @@ export const NewPet = ({auth, pets, history, savePet}) => {
         })
     }
 
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
-        })
-    }
-
     const abilityHandler = (e) => {
         if (e.target.type === "number"){
             setAbility({
@@ -105,6 +97,18 @@ export const NewPet = ({auth, pets, history, savePet}) => {
             })
         }
     }
+
+    var dropStyleHandler = (e) => {
+        let value = e[0]
+        drop_styles.map(drop => {
+            if (e.value === drop) {
+                setData({
+                    ...data,
+                    DROP_STYLE: drop,
+                })
+            }
+        })
+    };
 
 
     if(!universes.loading) {
@@ -132,6 +136,12 @@ export const NewPet = ({auth, pets, history, savePet}) => {
             value: element, label: `${element}`
         }
     })
+
+    var dropStyleSelector = drop_styles.map(drop => {
+        return {
+            value: drop, label: `${drop}`
+        }
+    });
 
     var abilityElementHandler = (e) => {
         let value = e[0]
@@ -184,7 +194,7 @@ export const NewPet = ({auth, pets, history, savePet}) => {
             <div>
                 <div className="page-header">
                     <h3 className="page-title">
-                        New Crown Unlimited Pet
+                        New Summon
                     </h3>
                 </div>
                 <div className="row">
@@ -200,6 +210,18 @@ export const NewPet = ({auth, pets, history, savePet}) => {
                                                 options={
                                                     universeSelector
                                                 }
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                            <Form.Label>Drop Style</Form.Label>
+                                            <Select
+                                                onChange={dropStyleHandler}
+                                                options={
+                                                    dropStyleSelector
+                                                }
+                                                required
                                                 styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -232,8 +254,7 @@ export const NewPet = ({auth, pets, history, savePet}) => {
                                             
                                         </Form.Group>
                                     </Form.Row>
-
-
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="11" controlId="validationCustom02">
                                                 <Form.Label>Ability</Form.Label>
@@ -287,22 +308,11 @@ export const NewPet = ({auth, pets, history, savePet}) => {
                                             </Form.Control>
                                             
                                             </Form.Group>
-                                            <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Exclusive </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={exclusiveHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
-                                            </Form.Group>
                                     </Form.Row>
-                                    <Button type="submit">Create Pet</Button>
+                                    <Button type="submit">Create Summon</Button>
                                     <br />
                                     <br />
-                                    <Link to="/updatepets"><Button variant="warning">Update Pets</Button></Link> 
+                                    <Link to="/updatepets"><Button variant="warning">Update Summons</Button></Link> 
                                     <br/>
                                     <br />
                                     {submission_alert_dom}

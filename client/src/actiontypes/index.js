@@ -15,6 +15,7 @@ export const GET_CARD = "GET_CARD";
 export const ADD_CARD = "ADD_CARD";
 export const DELETE_CARD = "DELETE_CARD";
 export const UPDATE_CARD = "UPDATE_CARD";
+export const GET_CARD_AI_INFO = "GET_CARD_AI_INFO";
 
 export const GET_PETS = "GET_PETS";
 export const ADD_PET = "ADD_PET";

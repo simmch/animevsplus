@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { armInitialState, arm_enhancements, elements } from '../STATE'
+import { armInitialState, arm_enhancements, elements, drop_styles } from '../STATE'
 import { saveArm } from '../../actions/arms'
 
 export const NewArm = ({auth, history, saveArm}) => {
@@ -30,14 +30,12 @@ export const NewArm = ({auth, history, saveArm}) => {
     const {
         ARM,
         PRICE,
-        TOURNAMENT_REQUIREMENTS,
         ABILITIES,
         UNIVERSE,
-        COLLECTION,
-        STOCK,
         AVAILABLE,
-        EXCLUSIVE,
-        ELEMENT
+        ELEMENT,
+        DROP_STYLE,
+        ID
     } = data;
     
     useEffect(() => {
@@ -56,12 +54,6 @@ export const NewArm = ({auth, history, saveArm}) => {
                 ...data,
                 [e.target.name]: e.target.valueAsNumber
             })
-        } else if ((e.target.checked === true || e.target.checked === false) && e.target.name == "formHorizontalRadios") {
-            const radio = e.currentTarget.id === 'false' ? false : true
-            setData({
-                ...data,
-                HAS_COLLECTION: radio
-            })
         } else {
             setData({
                 ...data,
@@ -78,13 +70,6 @@ export const NewArm = ({auth, history, saveArm}) => {
         })
     }
 
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
-        })
-    }
-
     const abilityHandler = (e) => {
         if (e.target.type === "number"){
             setAbility({
@@ -94,13 +79,25 @@ export const NewArm = ({auth, history, saveArm}) => {
         } 
     }
 
+    var dropStyleHandler = (e) => {
+        let value = e[0]
+        drop_styles.map(drop => {
+            if (e.value === drop) {
+                setData({
+                    ...data,
+                    DROP_STYLE: drop,
+                })
+            }
+        })
+    };
+
     if(!universes.loading) {
         var universeSelector = universes.universe.map(universe => {
             return {
                 value: universe.TITLE, label: `${universe.TITLE}`
             }
         })
-    
+
         var universeHandler = (e) => {
             let value = e[0]
             universes.universe.map(universe => {
@@ -125,6 +122,12 @@ export const NewArm = ({auth, history, saveArm}) => {
             value: element, label: `${element}`
         }
     })
+
+    var dropStyleSelector = drop_styles.map(drop => {
+        return {
+            value: drop, label: `${drop}`
+        }
+    });
 
     var elementEnhancementHandler = (e) => {
         let value = e[0]
@@ -165,9 +168,15 @@ export const NewArm = ({auth, history, saveArm}) => {
         } else {
             setValidated(false)
             e.preventDefault();
-
+            const min = 1000000; // Minimum 7-digit number (inclusive)
+            const max = 9999999; // Maximum 7-digit number (inclusive)
+            const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
             var arm_update_data = data;
             arm_update_data.ABILITIES = [abililty_Object]
+            setData({
+                ...data,
+                ID: randomCode.toString()
+            })
             // console.log(arm_update_data)
             const res = await saveArm(data)
 
@@ -199,7 +208,7 @@ export const NewArm = ({auth, history, saveArm}) => {
                             <div className="card-body">
                                 <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
                                     <Form.Row>
-                                        <Form.Group as={Col} md="6" controlId="validationCustom01">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom01">
                                             <Form.Label>Select Universe</Form.Label>
                                             <Select
                                                 onChange={universeHandler}
@@ -210,7 +219,7 @@ export const NewArm = ({auth, history, saveArm}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
-                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Name</Form.Label>
                                             <Form.Control
                                                 value={ARM}
@@ -218,15 +227,25 @@ export const NewArm = ({auth, history, saveArm}) => {
                                                 name="ARM"
                                                 required
                                                 type="text"
-
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Drop Style</Form.Label>
+                                            <Select
+                                                onChange={dropStyleHandler}
+                                                options={
+                                                    dropStyleSelector
+                                                }
+                                                required
+                                                styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
 
                                     <Form.Row>
-
-                                    <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label>Power</Form.Label>
                                             <Form.Control
                                                 value={ability.POWER}
@@ -268,37 +287,8 @@ export const NewArm = ({auth, history, saveArm}) => {
                                             
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Price</Form.Label>
-                                            <Form.Control
-                                                value={PRICE}
-                                                name="PRICE"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Stock</Form.Label>
-                                            <Form.Control
-                                                value={STOCK}
-                                                name="STOCK"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
-                                            
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
@@ -308,17 +298,6 @@ export const NewArm = ({auth, history, saveArm}) => {
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
                                             
-                                            </Form.Group>
-                                            <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Exclusive </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={exclusiveHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
                                             </Form.Group>
                                     </Form.Row>
                                     <Button type="submit">Create Arm</Button>

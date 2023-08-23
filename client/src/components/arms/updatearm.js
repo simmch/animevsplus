@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { armInitialState, arm_enhancements, elements } from '../STATE'
+import { armInitialState, arm_enhancements, elements, drop_styles } from '../STATE'
 import { updateArm, deleteArm } from '../../actions/arms'
 
 export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
@@ -38,14 +38,12 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
     const {
         ARM,
         PRICE,
-        TOURNAMENT_REQUIREMENTS,
         ABILITIES,
         UNIVERSE,
-        COLLECTION,
-        STOCK,
         AVAILABLE,
-        EXCLUSIVE, 
-        ELEMENT
+        ELEMENT,
+        DROP_STYLE, 
+        ID
     } = data;
     
     useEffect(() => {
@@ -81,20 +79,12 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
                 [e.target.name]: e.target.value
             })
         }
-        
     }
 
     const availableHandler = (e) => {
         setData({
             ...data,
             AVAILABLE: Boolean(e.target.value)
-        })
-    }
-
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
         })
     }
 
@@ -106,6 +96,18 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
             })
         } 
     }
+
+    var dropStyleHandler = (e) => {
+        let value = e[0]
+        drop_styles.map(drop => {
+            if (e.value === drop) {
+                setData({
+                    ...data,
+                    DROP_STYLE: drop,
+                })
+            }
+        })
+    };
 
     if(!universes.loading) {
         var universeSelector = universes.universe.map(universe => {
@@ -133,7 +135,7 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
                 value: arm.ARM, label: `${arm.ARM}`
             }
         })
-    
+
         var armHandler = (e) => {
             let value = e[0]
             armData.data.map(arm => {
@@ -157,14 +159,12 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
                         ...data,
                         ARM: arm.ARM,
                         PRICE: arm.PRICE,
-                        TOURNAMENT_REQUIREMENTS: arm.TOURNAMENT_REQUIREMENTS,
                         ABILITIES: [abilities_Object],
                         UNIVERSE: arm.UNIVERSE,
-                        COLLECTION: "N/A",
-                        STOCK: arm.STOCK,
                         AVAILABLE: arm.AVAILABLE,
-                        EXCLUSIVE: arm.EXCLUSIVE,
-                        ELEMENT: arm.ELEMENT
+                        DROP_STYLE: arm.DROP_STYLE,
+                        ELEMENT: arm.ELEMENT,
+                        ID: arm.ID
                     })
                 }
             })
@@ -182,6 +182,12 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
             value: element, label: `${element}`
         }
     })
+
+    var dropStyleSelector = drop_styles.map(drop => {
+        return {
+            value: drop, label: `${drop}`
+        }
+    });
 
     var elementEnhancementHandler = (e) => {
         let value = e[0]
@@ -275,11 +281,21 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
+                                        <Form.Group as={Col} md="6" controlId="validationCustom01">
+                                            <Form.Label>Drop Style - {DROP_STYLE}</Form.Label>
+                                            <Select
+                                                onChange={dropStyleHandler}
+                                                options={
+                                                    dropStyleSelector
+                                                }
+                                                styles={styleSheet}
+                                            />  
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
                                     </Form.Row>
 
                                     <Form.Row>
-
-                                    <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label>Power</Form.Label>
                                             <Form.Control
                                                 value={ability.POWER}
@@ -319,54 +335,12 @@ export const UpdateArm = ({auth, history, updateArm, deleteArm}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Price</Form.Label>
-                                            <Form.Control
-                                                value={PRICE}
-                                                name="PRICE"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Stock</Form.Label>
-                                            <Form.Control
-                                                value={STOCK}
-                                                name="STOCK"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
-                                            
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
                                                 onChange={availableHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
-                                            
-                                            </Form.Group>
-                                            <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Exclusive </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={exclusiveHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>

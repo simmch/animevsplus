@@ -4,7 +4,8 @@ import {
     GET_ALL_CARDS,
     GET_CARD,
     DELETE_CARD,
-    UPDATE_CARD
+    UPDATE_CARD,
+    GET_CARD_AI_INFO,
 } from '../actiontypes/index';
 import { loadUser } from "./auth/auth"; 
 
@@ -33,6 +34,7 @@ export const loadSingleCard = (card) => async (dispatch) => {
         console.error(err)
     }
 }
+
 
 export const saveCard = (card) => async (dispatch) => {
     try {

@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { petInitialState, enhancements, elements } from '../STATE';
+import { petInitialState, enhancements, elements, drop_styles } from '../STATE';
 import { updatePet, deletePet } from '../../actions/pets';
 import _ from 'lodash';
 
@@ -42,11 +42,10 @@ export const UpdatePet = ({auth, pets, history, updatePet, deletePet}) => {
         PET,
         PATH,
         UNIVERSE,
-        LVL,
         ABILITIES,
-        COLLECTION,
         AVAILABLE,
-        EXCLUSIVE} = data;
+        DROP_STYLE
+    } = data;
 
     
     useEffect(() => {
@@ -92,12 +91,17 @@ export const UpdatePet = ({auth, pets, history, updatePet, deletePet}) => {
         })
     }
 
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
+    var dropStyleHandler = (e) => {
+        let value = e[0]
+        drop_styles.map(drop => {
+            if (e.value === drop) {
+                setData({
+                    ...data,
+                    DROP_STYLE: drop,
+                })
+            }
         })
-    }
+    };
 
     const abilityHandler = (e) => {
         if (e.target.type === "number"){
@@ -142,6 +146,12 @@ export const UpdatePet = ({auth, pets, history, updatePet, deletePet}) => {
             })
         }
     }
+
+    var dropStyleSelector = drop_styles.map(drop => {
+        return {
+            value: drop, label: `${drop}`
+        }
+    });
 
     var elementSelector = elements.map(element => {
         return {
@@ -275,8 +285,20 @@ export const UpdatePet = ({auth, pets, history, updatePet, deletePet}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
-                                        
+                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                            <Form.Label>Drop Style - {DROP_STYLE}</Form.Label>
+                                            <Select
+                                                onChange={dropStyleHandler}
+                                                options={
+                                                    dropStyleSelector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
                                     </Form.Row>
+
                                     <Form.Row>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Path</Form.Label>
@@ -328,27 +350,13 @@ export const UpdatePet = ({auth, pets, history, updatePet, deletePet}) => {
                                                 styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
                                         <Form.Group as={Col} md="2" controlId="validationCustom27">
                                             <Form.Label> Available </Form.Label>
-                                            
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
                                                 onChange={availableHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
-                                            
-                                            </Form.Group>
-                                            <Form.Group as={Col} md="2" controlId="validationCustom28">
-                                            <Form.Label> Exclusive </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={exclusiveHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>

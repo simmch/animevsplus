@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { scenarioInitialState } from '../STATE';
+import { scenarioInitialState, tactics } from '../STATE';
 import { updateScenario, saveScenario, deleteScenario } from '../../actions/scenarios';
 import scenarios from '../../reducers/scenarios';
 
@@ -40,6 +40,8 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
     const {
         TITLE,
+        MUST_COMPLETE,
+        IS_RAID,
         IMAGE,
         ENEMY_LEVEL,
         ENEMIES,
@@ -47,6 +49,10 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
         NORMAL_DROPS,
         HARD_DROPS,
         UNIVERSE,
+        AVAILABLE,
+        DESTINY_CARDS,
+        TACTICS,
+        IS_DESTINY
     } = data;
 
     useEffect(() => {
@@ -72,28 +78,21 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
     }, [auth])
 
     const onChangeHandler = (e) => {
-        setShow(false)
-        if (e.target.type === "number"){
-            setData({
-                ...data,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } else {
-            setData({
-                ...data,
-                [e.target.name]: e.target.value
-            })
+        setShow(false);
+    
+        let value = e.target.value;
+    
+        if (e.target.type === "number") {
+            value = e.target.valueAsNumber;
+        } else if (e.target.name === "AVAILABLE" || e.target.name === "IS_RAID" || e.target.name === "IS_DESTINY") {
+            value = Boolean(e.target.value);
         }
-        
+    
+        setData(prevData => ({
+            ...prevData,
+            [e.target.name]: value
+        }));
     }
-
-    const isRaidHandler = (e) => {
-        setData({
-            ...data,
-            IS_RAID: Boolean(e.target.value)
-        })
-    }
-
 
     if(!scenarioData.loading) {
         var scenarioSelector = scenarioData.scenarios.map(scenario => {
@@ -117,7 +116,11 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                         EASY_DROPS: scenario.EASY_DROPS,
                         NORMAL_DROPS: scenario.NORMAL_DROPS,
                         HARD_DROPS: scenario.HARD_DROPS,
-                        UNIVERSE: scenario.UNIVERSE
+                        UNIVERSE: scenario.UNIVERSE,
+                        IS_DESTINY: scenario.IS_DESTINY,
+                        DESTINY_CARDS: scenario.DESTINY_CARDS,
+                        TACTICS: scenario.TACTICS,
+                        AVAILABLE: scenario.AVAILABLE
                     })
                 }
             })
@@ -258,6 +261,27 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
             }
         }
 
+        var destinyCardHandler = (e) => {
+            if(e != null){
+                let value = e
+                const destinyCardList = [];
+                for(const e of value){
+                    if(!data.DESTINY_CARDS.includes(e)){
+                        destinyCardList.push(e.value)
+                    }
+                }
+                if(destinyCardList){
+                    setData({
+                        ...data,
+                        DESTINY_CARDS: destinyCardList,
+                        IS_DESTINY: true
+                    })
+                }
+                
+            }
+        }
+
+
         var bannedCardsHandler = (e) => {
             if(e != null){
                 let value = e
@@ -278,12 +302,23 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
         }
     }
 
-    const availableHandler = (e) => {
-        setData({
-            ...data,
-            AVAILABLE: Boolean(e.target.value)
+    var tacticsHandler = (e) => {
+        let value = e[0]
+        tactics.map(tactic => {
+            if (e.value === tactic) {
+                setData({
+                    ...data,
+                    TACTICS: tactic,
+                })
+            }
         })
-    }
+    };
+
+    var tacticsSelector = tactics.map(tactic => {
+        return {
+            value: tactic, label: `${tactic}`
+        }
+    });
 
 
     console.log(data)
@@ -507,52 +542,87 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                         </Form.Group>
  
                                     </Form.Row>
-
-
-
                                     <Form.Row>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
                                             
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
-                                                onChange={availableHandler}
+                                                onChange={onChangeHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
                                             
                                         </Form.Group>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label> Is Raid? </Form.Label>
-                                            
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
-                                                onChange={isRaidHandler}
+                                                onChange={onChangeHandler}
                                             >
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
-                                            
                                         </Form.Group>
-
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label> Is Destiny? </Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={onChangeHandler}
+                                            >
+                                                <option value={true} name="true">Yes</option>
+                                                <option value={""} name="false">No</option>
+                                            </Form.Control>
+                                        </Form.Group>
                                     <Form.Row>
 
-                                    </Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Must First Complete These Scenarios</Form.Label>
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Destiny Cards</Form.Label>
                                             <Select
-                                                onChange={scenarioListHandler}
+                                                onChange={destinyCardHandler}
                                                 isMulti
-                                                options={scenarioSelector}
+                                                options={cardSelector}
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Raid Tactics</Form.Label>
+                                            <Select
+                                                onChange={tacticsHandler}
+                                                isMulti
+                                                options={tacticsSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                    </Form.Row>
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                                <Form.Label>Must First Complete These Scenarios</Form.Label>
+                                                <Select
+                                                    onChange={scenarioListHandler}
+                                                    isMulti
+                                                    options={scenarioSelector}
+                                                    className="basic-multi-select"
+                                                    classNamePrefix="select"
+                                                    styles={styleSheet}
+                                                />
+                                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
 
                                     </Form.Row>
 

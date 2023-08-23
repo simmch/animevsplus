@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { cardInitialState, enhancements, elements, classes } from '../STATE'
+import { cardInitialState, enhancements, elements, classes, drop_styles } from '../STATE'
 import { saveCard } from '../../actions/cards'
 
 export const NewCard = ({auth, cards, history, saveCard}) => {
@@ -15,11 +15,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         loading: true
     });
 
-    const [desc, setDesc] = useState({
-        DESC: [],
-        TEXT: ""
-    })
-
     const [cardData, setCardData] = useState({
         loading: true
     });
@@ -27,6 +22,26 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         apValues: 0,
         atkDef: 0
     })
+    const [moveOptions, setMoveOptions] = useState({
+        POTENTIAL_MOVE1: "",
+        POTENTIAL_MOVE1_ELEMENT: "",
+        POTENTIAL_MOVE1_POWER: null,
+        POTENTIAL_MOVE2: "",
+        POTENTIAL_MOVE2_ELEMENT: "",
+        POTENTIAL_MOVE2_POWER: null,
+        POTENTIAL_MOVE3: "",
+        POTENTIAL_MOVE3_ELEMENT: "",
+        POTENTIAL_MOVE3_POWER: null,
+        POTENTIAL_MOVE4: "",
+        POTENTIAL_MOVE4_ELEMENT: "",
+        POTENTIAL_MOVE4_POWER: null,
+        POTENTIAL_MOVE5: "",
+        POTENTIAL_MOVE5_ELEMENT: "",
+        POTENTIAL_MOVE5_POWER: null,
+    })
+
+    const [aiToggle, setAiToggle] = useState(false);
+    const [aiToggleFailure, setAiToggleFailure] = useState(false);
     const [data, setData] = useState(cardInitialState);
     const [validated, setValidated] = useState(false);
     const [show, setShow] = useState(false);
@@ -44,7 +59,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     passive_Object[pass_key] = pass_power
     passive_Object["TYPE"] = pass_type
 
-    var potentialPowerValues = 0
     const [moves, setMoves] = useState({
         MOVE1_ABILITY: "",
         MOVE1_POWER: null,
@@ -66,7 +80,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     var enhancerObject = {}
     var movesArray = []
 
-    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, TOURNAMENT_REQUIREMENTS, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, COLLECTION, HAS_COLLECTION, STOCK, AVAILABLE, DESCRIPTIONS, EXCLUSIVE, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB, CLASS, IMAGE_PLUS} = data;
+    const {PATH, FPATH, RPATH, GIF, NAME, RNAME, PRICE, MOVESET, HLT, STAM, ATK, DEF, TYPE, TIER, PASS, SPD, VUL, UNIVERSE, AVAILABLE, DESCRIPTIONS, IS_SKIN, SKIN_FOR, WEAKNESS, RESISTANT, REPEL, IMMUNE, ABSORB, CLASS, DROP_STYLE, ID} = data;
     const {MOVE1_ABILITY, MOVE1_POWER, MOVE1_ELEMENT, MOVE2_ABILITY, MOVE2_POWER, MOVE2_ELEMENT, MOVE3_ABILITY, MOVE3_POWER, MOVE3_ELEMENT, ENHANCER_ABILITY,ENHANCEMENT_TYPE, ENHANCER_POWER} = moves;
     if({...moves}){
         move1Object[MOVE1_ABILITY] = MOVE1_POWER
@@ -103,170 +117,103 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                     setCardData({data: res.data, loading: false})
             })
         }
-      }, [auth])
+
+      }, [data, passive, moves, auth])
+
+
+    const tierConfig = { 
+        1: {
+            HLT: 1725,
+            atkDef: 325,
+            apValues: 500
+        },
+        2: {
+            HLT: 1750,
+            atkDef: 350,
+            apValues: 550
+        },
+        3: {
+            HLT: 1800,
+            atkDef: 400,
+            apValues: 600
+        },
+        4: {
+            HLT: 1850,
+            atkDef: 425,
+            apValues: 650
+        },
+        5: {
+            HLT: 1900,
+            atkDef: 450,
+            apValues: 700
+        },
+        6: {
+            HLT: 1950,
+            atkDef: 475,
+            apValues: 750
+        },
+        7: {
+            HLT: 2000,
+            atkDef: 500,
+            apValues: 800
+        }
+    };
+    
+    function setTierDefaults(type, value) {
+        if (type === "TIER" && tierConfig[value]) {
+            setData({
+                ...data,
+                TIER: value,
+                HLT: tierConfig[value].HLT
+            });
+            
+            setDefaults({
+                atkDef: tierConfig[value].atkDef,
+                apValues: tierConfig[value].apValues
+            });
+        }
+    }
 
     const onChangeHandler = (e) => {
-        setShow(false)
-        if (e.target.type === "number"){
-            setData({
-                ...data,
-                [e.target.name]: e.target.valueAsNumber
-            })
-            setTierDefaults(e.target.name, e.target.valueAsNumber, data.TIER)
-        } else if ((e.target.checked === true || e.target.checked === false) && e.target.name == "formHorizontalRadios") {
-            const radio = e.currentTarget.id === 'false' ? false : true
-            setData({
-                ...data,
-                HAS_COLLECTION: radio
-            })
-        } else {
-            setData({
-                ...data,
-                [e.target.name]: e.target.value
-            })
+        setShow(false);
+    
+        const { type, name, value, valueAsNumber, id } = e.target;
+    
+        // For input of type number
+        if (type === "number") {
+            setData(prevData => ({
+                ...prevData,
+                [name]: valueAsNumber
+            }));
+            setTierDefaults(name, valueAsNumber, data.TIER);
+            return;
         }
-        
-    }
-
-    function setTierDefaults(type, value, tier) {
-        if(type === "TIER") {
-            switch (value) {
-                case 1:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 5000,
-                        HLT: 1725,
-                    })
-                    setDefaults({
-                        atkDef: 325,
-                        apValues: 500
-                    })
-                    break;
-                case 2:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 10000,
-                        HLT: 1750,
-                    })
-                    setDefaults({
-                        atkDef: 350,
-                        apValues: 550
-                    })
-                    break;
-                case 3:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 50000,
-                        HLT: 1800,
-                    })
-                    setDefaults({
-                        atkDef: 400,
-                        apValues: 600
-                    })
-
-                    break;
-                case 4:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 100000,
-                        HLT: 1850,
-                    })
-                    setDefaults({
-                        atkDef: 425,
-                        apValues: 650
-                    })
-                    break;
-                case 5:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 1000000,
-                        HLT: 1900,
-                    })
-                    setDefaults({
-                        atkDef: 450,
-                        apValues: 700
-                    })
-                    break;
-                case 6:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 5000000,
-                        HLT: 1950,
-                    })
-                    setDefaults({
-                        atkDef: 475,
-                        apValues: 750
-                    })
-                    break;
-                case 7:
-                    setData({
-                        ...data,
-                        TIER: value,
-                        PRICE: 25000000,
-                        HLT: 2000,
-                    })
-                    setDefaults({
-                        atkDef: 500,
-                        apValues: 800
-                    })
-                    break;
-                default:
-                    break;
-            }
-            
+    
+        // For the IS_SKIN field
+        if (name === "IS_SKIN") {
+            setData(prevData => ({
+                ...prevData,
+                IS_SKIN: Boolean(value)
+            }));
+            return;
         }
-    }
 
-    const onDescriptionHandler = (e) => {
-        setShow(false)
-        setDesc({
-            ...desc,
-            TEXT: e.target.value
-        })
-    }
-
-    const onDescriptionAdd = (e) => {
-        e.preventDefault();
-        console.log(desc.DESC)
-        var temp_desc = desc.DESC
-        if (desc.DESC === undefined){
-            console.log("IT IS UNDEFINED")
-            temp_desc = [desc.TEXT]
+        // For the AVAILABLE field
+        if (name === "AVAILABLE") {
+            setData(prevData => ({
+                ...prevData,
+                AVAILABLE: Boolean(value)
+            }));
+            return;
         }
-        temp_desc.push(desc.TEXT)
-        setDesc({
-            ...desc,
-            DESC: temp_desc,
-            TEXT: ""
-        })
-    }
+    
+        // For other inputs
+        setData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
-    const availableHandler = (e) => {
-        setData({
-            ...data,
-            AVAILABLE: Boolean(e.target.value)
-        })
-    }
-
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
-        })
-    }
-
-    const isSkinHandler = (e) => {
-        setData({
-            ...data,
-            IS_SKIN: Boolean(e.target.value)
-        })
-    }
 
     const passiveHandler = (e) => {
         if (e.target.type === "number"){
@@ -314,6 +261,32 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         enhancerObject['TYPE'] = ENHANCEMENT_TYPE
     }
 
+    var classHandler = (e) => {
+        let value = e[0]
+        classes.map(c => {
+            if (e.value === c) {
+                setData({
+                    ...data,
+                    CLASS: c,
+                })
+            }
+        })
+    };
+
+
+    var dropStyleHandler = (e) => {
+        let value = e[0]
+        drop_styles.map(drop => {
+            if (e.value === drop) {
+                setData({
+                    ...data,
+                    DROP_STYLE: drop,
+                })
+            }
+        })
+    };
+
+
     if(!universes.loading) {
         var universeSelector = universes.universe.map(universe => {
             return {
@@ -332,7 +305,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 }
             })
         }
-    }
+    };
 
     if(!cardData.loading) {
         var cardSelector = cardData.data.map(card => {
@@ -353,6 +326,87 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 }
             })
         }
+        
+    };
+
+
+    const onClickAi = async (e) => {
+        try {
+            // e.preventDefault()
+            const res = await axios.get(`/crown/ai/prompt/${data.NAME}/${data.UNIVERSE}`)
+            if(res){
+                const min = 1000000; // Minimum 7-digit number (inclusive)
+                const max = 9999999; // Maximum 7-digit number (inclusive)
+                const randomCode = Math.floor(Math.random() * (max - min + 1)) + min;
+
+                setData({
+                    ...data,
+                    CLASS: res.data.card_class,
+                    TIER: parseInt(res.data.tier, 10),
+                    HLT: parseInt(res.data.health, 10),
+                    ATK: parseInt(res.data.attack, 10),
+                    DEF: parseInt(res.data.defense, 10),
+                    SPD: parseInt(res.data.speed, 10),
+                    WEAKNESS: res.data.weaknesses,
+                    RESISTANT: res.data.resistances,
+                    REPEL: res.data.repels,
+                    IMMUNE: res.data.immunity,
+                    ABSORB: res.data.absorbs,
+                    ID: randomCode.toString()
+                })
+
+                setPassive({
+                    ...passive,
+                    ABILITY: res.data.passive_ability_name,
+                    PASSIVE_TYPE: res.data.passive_ability_type,
+                })
+
+                setMoves({
+                    ...moves,
+                    MOVE1_ABILITY: res.data.normal_attack_name,
+                    MOVE1_POWER: res.data.normal_attack_power,
+                    MOVE1_ELEMENT: res.data.normal_attack_element.toUpperCase(),
+                    MOVE2_ABILITY: res.data.special_attack_name,
+                    MOVE2_POWER: res.data.special_attack_power,
+                    MOVE2_ELEMENT: res.data.special_attack_element.toUpperCase(),
+                    MOVE3_ABILITY: res.data.ultimate_attack_name,
+                    MOVE3_POWER: res.data.ultimate_attack_power,
+                    MOVE3_ELEMENT: res.data.ultimate_attack_element.toUpperCase(),
+                    ENHANCER_ABILITY: res.data.enhancement_ability_name,
+                    ENHANCEMENT_TYPE: res.data.enhancement_ability_type.toUpperCase(),
+                })
+
+                setMoveOptions({
+                    ...moveOptions,
+                    POTENTIAL_MOVE1: res.data.potential_ability1_name,
+                    POTENTIAL_MOVE1_ELEMENT: res.data.potential_ability1_element.toUpperCase(),
+                    POTENTIAL_MOVE1_POWER: res.data.potential_ability1_power,
+                    POTENTIAL_MOVE2: res.data.potential_ability2_name,
+                    POTENTIAL_MOVE2_ELEMENT: res.data.potential_ability2_element.toUpperCase(),
+                    POTENTIAL_MOVE2_POWER: res.data.potential_ability2_power,
+                    POTENTIAL_MOVE3: res.data.potential_ability3_name,
+                    POTENTIAL_MOVE3_ELEMENT: res.data.potential_ability3_element.toUpperCase(),
+                    POTENTIAL_MOVE3_POWER: res.data.potential_ability3_power,
+                    POTENTIAL_MOVE4: res.data.potential_ability4_name,
+                    POTENTIAL_MOVE4_ELEMENT: res.data.potential_ability4_element.toUpperCase(),
+                    POTENTIAL_MOVE4_POWER: res.data.potential_ability4_power,
+                    POTENTIAL_MOVE5: res.data.potential_ability5_name,
+                    POTENTIAL_MOVE5_ELEMENT: res.data.potential_ability5_element.toUpperCase(),
+                    POTENTIAL_MOVE5_POWER: res.data.potential_ability5_power,
+                })
+                setAiToggle(true)
+            } else {
+                setAiToggleFailure(true)
+                // Set 5 second timeout until it auto flips back to false
+                setTimeout(() => {
+                    setAiToggleFailure(false)
+                }
+                , 5000)
+            }
+
+        } catch (err) {
+            console.error(err)
+        }
     }
 
 
@@ -360,32 +414,25 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         return {
             value: enhancement, label: `${enhancement}`
         }
-    })
+    });
 
     var elementSelector = elements.map(element => {
         return {
             value: element, label: `${element}`
         }
-    })
+    });
 
     var classSelector = classes.map(classType => {
         return {
             value: classType, label: `${classType}`
         }
-    })
+    });
 
-
-    var classHandler = (e) => {
-        let value = e[0]
-        classes.map(c => {
-            if (e.value === c) {
-                setData({
-                    ...data,
-                    CLASS: c,
-                })
-            }
-        })
-    }
+    var dropStyleSelector = drop_styles.map(drop => {
+        return {
+            value: drop, label: `${drop}`
+        }
+    });
 
     var passiveEnhancementHandler = (e) => {
         let value = e[0]
@@ -398,7 +445,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             }
         })
 
-    }
+    };
 
     var moveEnhancementHandler = (e) => {
         let value = e[0]
@@ -410,135 +457,46 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 })
             }
         })
-    }
+    };
 
-    var element1EnhancementHandler = (e) => {
-        let value = e[0]
-        elements.map(element => {
-            if (e.value === element) {
-                setMoves({
-                    ...moves,
-                    MOVE1_ELEMENT: element,
-                })
-            }
-        })
-    }
-    var element2EnhancementHandler = (e) => {
-        let value = e[0]
-        elements.map(element => {
-            if (e.value === element) {
-                setMoves({
-                    ...moves,
-                    MOVE2_ELEMENT: element,
-                })
-            }
-        })
-    }
-    var element3EnhancementHandler = (e) => {
-        let value = e[0]
-        elements.map(element => {
-            if (e.value === element) {
-                setMoves({
-                    ...moves,
-                    MOVE3_ELEMENT: element,
-                })
-            }
-        })
-    }
+    const enhanceElementHandler = (e, moveType) => {
+        if (elements.includes(e.value)) {
+            setMoves({
+                ...moves,
+                [moveType]: e.value
+            });
+        }
+    };
+    const element1EnhancementHandler = (e) => enhanceElementHandler(e, 'MOVE1_ELEMENT');
+    const element2EnhancementHandler = (e) => enhanceElementHandler(e, 'MOVE2_ELEMENT');
+    const element3EnhancementHandler = (e) => enhanceElementHandler(e, 'MOVE3_ELEMENT');
     
-    var weaknessHandler = (e) => {
-        if(e != null){
-            let value = e
-            const weaknessList = [];
-            for(const ti of value){
-                if(!data.WEAKNESS.includes(ti)){
-                    weaknessList.push(ti.value)
-                }
-            }
-            if(weaknessList){
-                setData({
-                    ...data,
-                    WEAKNESS: weaknessList,
-                })
-            }
-            
-        }
-    }
-    var resistancesHandler = (e) => {
-        if(e != null){
-            let value = e
-            const resistancesList = [];
-            for(const ti of value){
-                if(!data.RESISTANT.includes(ti)){
-                    resistancesList.push(ti.value)
-                }
-            }
-            if(resistancesList){
-                setData({
-                    ...data,
-                    RESISTANT: resistancesList,
-                })
-            }
-            
-        }
-    }
+    const genericHandler = (e, property) => {
+        if (e !== null) {
+            const list = [];
     
-    var repelsHandler = (e) => {
-        if(e != null){
-            let value = e
-            const repelsList = [];
-            for(const ti of value){
-                if(!data.REPEL.includes(ti)){
-                    repelsList.push(ti.value)
+            for (const ti of e) {
+                if (!data[property].includes(ti)) {
+                    list.push(ti.value);
                 }
             }
-            if(repelsList){
+    
+            if (list.length > 0) {
                 setData({
                     ...data,
-                    REPEL: repelsList,
-                })
+                    [property]: list
+                });
             }
-            
         }
-    }
-    var immunityHandler = (e) => {
-        if(e != null){
-            let value = e
-            const immunityList = [];
-            for(const ti of value){
-                if(!data.IMMUNE.includes(ti)){
-                    immunityList.push(ti.value)
-                }
-            }
-            if(immunityList){
-                setData({
-                    ...data,
-                    IMMUNE: immunityList,
-                })
-            }
-            
-        }
-    }
-    var absorbHandler = (e) => {
-        if(e != null){
-            let value = e
-            const absorbList = [];
-            for(const ti of value){
-                if(!data.ABSORB.includes(ti)){
-                    absorbList.push(ti.value)
-                }
-            }
-            if(absorbList){
-                setData({
-                    ...data,
-                    ABSORB: absorbList,
-                })
-            }
-            
-        }
-    }
+    };
+    
+    const weaknessHandler = (e) => genericHandler(e, 'WEAKNESS');
+    const resistancesHandler = (e) => genericHandler(e, 'RESISTANT');
+    const repelsHandler = (e) => genericHandler(e, 'REPEL');
+    const immunityHandler = (e) => genericHandler(e, 'IMMUNE');
+    const absorbHandler = (e) => genericHandler(e, 'ABSORB');
+    
 
-        
     var submission_response = "Success!";
     var submission_alert_dom = <Alert show={show} variant="success"> {submission_response} </Alert>
     const onSubmitHandler = async (e) => {
@@ -564,10 +522,13 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             const res = await saveCard(data)
 
             setData(cardInitialState)
+            console.log(data)
             setTimeout(()=> {setShow(true)}, 1000)
         }
 
-    }
+    };
+    console.log(data)
+    
 
     const styleSheet = {
         input: (base, state) => ({
@@ -582,16 +543,17 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             <div>
                 <div className="page-header">
                     <h3 className="page-title">
-                        New Crown Unlimited Card
+                        New Card
                     </h3>
                 </div>
+                
                 <div className="row">
                     <div className="col-md-12 grid-margin">
                         <div className="card">
                             <div className="card-body">
-                                <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
+                                <Form>
                                     <Form.Row>
-                                        <Form.Group as={Col} md="6" controlId="validationCustom01">
+                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
                                             <Form.Label><h4>Select Universe</h4></Form.Label>
                                             <Select
                                                 onChange={universeHandler}
@@ -604,8 +566,48 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
                                     </Form.Row>
                                     <Form.Row>
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Path</Form.Label>
+                                        <Form.Group as={Col} md="10" controlId="validationCustom02">
+                                            <Form.Label>Character Name</Form.Label>
+                                            <Form.Control
+                                                value={NAME}
+                                                name="NAME"
+                                                onChange={onChangeHandler}
+                                                required
+                                                type="text"
+
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    <Button
+                                        style={{ display: !aiToggle ? 'block' : 'none' }}
+                                        variant={aiToggleFailure ? 'danger' : 'primary'}
+                                        type="button"
+                                        onClick={onClickAi}
+                                    >
+                                        {aiToggleFailure ? 'Generation Failed, please click here to try again' : 'Generate Card Data'}
+                                    </Button>
+                                    <br />
+                                    {auth.user.data.IS_ADMIN ? 
+                                    <Link to="/updatecards"><Button variant="warning" style={{ display: !aiToggle ? 'block' : 'none' }}>Update Cards</Button></Link> 
+                                    : <span></span>
+                                    }
+                                    <br />
+                                    
+                                </Form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row" style={{ display: aiToggle ? 'block' : 'none' }}>
+                    <div className="col-md-12 grid-margin">
+                        <div className="card">
+                            <div className="card-body">
+                                <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Base Image Path</Form.Label>
                                             <Form.Control
                                                 value={PATH}
                                                 onChange={onChangeHandler}
@@ -617,8 +619,9 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Focused Path</Form.Label>
+
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Focused Image Path</Form.Label>
                                             <Form.Control
                                                 value={FPATH}
                                                 name="FPATH"
@@ -628,12 +631,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
 
 
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Resolved Path</Form.Label>
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Resolved Image Path</Form.Label>
                                             <Form.Control
                                                 value={RPATH}
                                                 name="RPATH"
@@ -643,25 +645,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Performance Image</Form.Label>
-                                            <Form.Control
-                                                value={IMAGE_PLUS}
-                                                name="IMAGE_PLUS"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="text"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                             
 
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Ultimate GIF</Form.Label>
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Ultimate Ability GIF</Form.Label>
                                             <Form.Control
                                                 value={GIF}
                                                 name="GIF"
@@ -673,36 +661,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-
-                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
-                                            <Form.Label>Name</Form.Label>
-                                            <Form.Control
-                                                value={NAME}
-                                                name="NAME"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="text"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Resolved Name</Form.Label>
-                                            <Form.Control
-                                                value={RNAME}
-                                                name="RNAME"
-                                                onChange={onChangeHandler}
-                                                type="text"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        
+                                    </Form.Row>
+                                    
+                                    <Form.Row>
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Card Class</Form.Label>
+                                        <Form.Label>Card Class - {CLASS}</Form.Label>
                                             <Select
                                                 onChange={classHandler}
                                                 options={
@@ -714,7 +677,8 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Tier</Form.Label>
                                             <Form.Control
                                                 value={TIER}
@@ -722,26 +686,13 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                                 onChange={onChangeHandler}
                                                 required
                                                 type="number"
-
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
+                                    </Form.Row>
 
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label>Price</Form.Label>
-                                            <Form.Control
-                                                value={PRICE}
-                                                name="PRICE"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Health</Form.Label>
                                             <Form.Control
                                                 value={HLT}
@@ -754,23 +705,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-                                        
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label>Stamina</Form.Label>
-                                            <Form.Control
-                                                disabled
-                                                value={STAM}
-                                                name="STAM"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Attack</Form.Label>
                                             <Form.Control
                                                 value={ATK}
@@ -784,7 +719,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Defense</Form.Label>
                                             <Form.Control
                                                 value={DEF}
@@ -798,7 +733,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Speed</Form.Label>
                                             <Form.Control
                                                 value={SPD}
@@ -811,8 +746,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
+                                    </Form.Row>
 
-                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Passive Ability</Form.Label>
                                             <Form.Control
                                                 value={passive.ABILITY}
@@ -840,7 +777,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Passive Type</Form.Label>
+                                        <Form.Label>Passive Type - {passive.PASSIVE_TYPE}</Form.Label>
                                             <Select
                                                 onChange={passiveEnhancementHandler}
                                                 options={
@@ -852,44 +789,43 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
 
-
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Has Destiny </Form.Label>
-                                            <Col sm={10}>
-                                                <Form.Check
-                                                onChange={onChangeHandler}
-                                                type="radio"
-                                                label="Yes"
-                                                name="formHorizontalRadios"
-                                                id="true"
-                                                checked = {HAS_COLLECTION === true}
-                                                />
-                                                <Form.Check
-                                                onChange={onChangeHandler}
-                                                type="radio"
-                                                label="No"
-                                                name="formHorizontalRadios"
-                                                id="false"
-                                                checked = {HAS_COLLECTION === false}
-                                                />
-                                            </Col>
-                                            </Form.Group>
-
-                                        <Form.Group hidden={!HAS_COLLECTION} as={Col} md="10" controlId="validationCustom02">
-                                        <Form.Label>Destiny</Form.Label>
-                                        <Form.Control
-                                                value={COLLECTION}
-                                                name="COLLECTION"
-                                                onChange={onChangeHandler}
-                                                type="text"
-
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Drop Style</Form.Label>
+                                            <Select
+                                                onChange={dropStyleHandler}
+                                                options={
+                                                    dropStyleSelector
+                                                }
+                                                required
+                                                styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
                                     </Form.Row>
+
                                     <p>Total Available Attack / Defense Point Left = {defaults.atkDef - (ATK + DEF)}</p>
                                     <p>Total Available Ability Points Left = {defaults.apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)}</p>
+                                    
+                                    <div>
+                                        <h2>Potential Abilities List</h2>
+                                        <ol>
+                                            <li>
+                                                {moveOptions.POTENTIAL_MOVE1} - {moveOptions.POTENTIAL_MOVE1_ELEMENT} - {moveOptions.POTENTIAL_MOVE1_POWER}
+                                            </li>
+                                            <li>
+                                                {moveOptions.POTENTIAL_MOVE2} - {moveOptions.POTENTIAL_MOVE2_ELEMENT} - {moveOptions.POTENTIAL_MOVE2_POWER}
+                                            </li>
+                                            <li>
+                                                {moveOptions.POTENTIAL_MOVE3} - {moveOptions.POTENTIAL_MOVE3_ELEMENT} - {moveOptions.POTENTIAL_MOVE3_POWER}
+                                            </li>
+                                            <li>
+                                                {moveOptions.POTENTIAL_MOVE4} - {moveOptions.POTENTIAL_MOVE4_ELEMENT} - {moveOptions.POTENTIAL_MOVE4_POWER}
+                                            </li>
+                                            <li>
+                                                {moveOptions.POTENTIAL_MOVE5} - {moveOptions.POTENTIAL_MOVE5_ELEMENT} - {moveOptions.POTENTIAL_MOVE5_POWER}
+                                            </li>
+                                        </ol>
+                                    </div>
                                     <Form.Row>
                                         <Form.Group as={Col} md="6" controlId="validationCustom02">
                                                 <Form.Label>Normal Attack</Form.Label>
@@ -918,7 +854,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                        <Form.Label>Element</Form.Label>
+                                        <Form.Label>Element - {MOVE1_ELEMENT}</Form.Label>
                                             <Select
                                                 onChange={element1EnhancementHandler}
                                                 options={
@@ -958,7 +894,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                        <Form.Label>Element</Form.Label>
+                                        <Form.Label>Element - {MOVE2_ELEMENT}</Form.Label>
                                             <Select
                                                 onChange={element2EnhancementHandler}
                                                 options={
@@ -999,7 +935,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                        <Form.Label>Element</Form.Label>
+                                        <Form.Label>Element - {MOVE3_ELEMENT}</Form.Label>
                                             <Select
                                                 onChange={element3EnhancementHandler}
                                                 options={
@@ -1026,7 +962,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Enhancement Type</Form.Label>
+                                        <Form.Label>Enhancement Type - {ENHANCEMENT_TYPE}</Form.Label>
                                             <Select
                                                 onChange={moveEnhancementHandler}
                                                 options={
@@ -1057,7 +993,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         <Form.Control
                                             as="select"
                                             id="inlineFormCustomSelectPref"
-                                            onChange={availableHandler}
+                                            onChange={onChangeHandler}
                                         >
                                             <option value={true} name="true">Yes</option>
                                             <option value={""} name="false">No</option>
@@ -1065,29 +1001,18 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         
                                         </Form.Group>
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                        <Form.Label> Exclusive </Form.Label>
-                                        <Form.Control
-                                            as="select"
-                                            id="inlineFormCustomSelectPref"
-                                            onChange={exclusiveHandler}
-                                        >
-                                            <option value={true} name="true">Yes</option>
-                                            <option value={""} name="false">No</option>
-                                        </Form.Control>
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
                                         <Form.Label> Is Skin? </Form.Label>
                                         <Form.Control
                                             as="select"
                                             id="inlineFormCustomSelectPref"
-                                            onChange={isSkinHandler}
+                                            onChange={onChangeHandler}
                                         >
                                             <option value={true} name="true">Yes</option>
                                             <option value={""} name="false">No</option>
                                         </Form.Control>
                                         </Form.Group>
-                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
-                                            <Form.Label><h4>Select Character For Skin</h4></Form.Label>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Skin for?</Form.Label>
                                             <Select
                                                 onChange={skinForHandler}
                                                 options={
@@ -1097,11 +1022,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
-
                                     </Form.Row>
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Weaknesses</Form.Label>
+                                            <Form.Label>Weaknesses - {data.WEAKNESS.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={weaknessHandler}
                                                 isMulti
@@ -1113,9 +1038,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Resistances</Form.Label>
+                                            <Form.Label>Resistances - {data.RESISTANT.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={resistancesHandler}
                                                 isMulti
@@ -1127,9 +1053,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Repels</Form.Label>
+                                            <Form.Label>Repels - {data.REPEL.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={repelsHandler}
                                                 isMulti
@@ -1141,9 +1068,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Immunity</Form.Label>
+                                            <Form.Label>Immunity - {data.IMMUNE.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={immunityHandler}
                                                 isMulti
@@ -1155,9 +1083,10 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
+                                    
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Absorbs</Form.Label>
+                                            <Form.Label>Absorbs - {data.ABSORB.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={absorbHandler}
                                                 isMulti
@@ -1170,8 +1099,8 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
                                     </Form.Row>
 
-
                                     <Button type="submit">Create Card</Button>
+                                    
                                     <br />
                                     <br />
                                     {auth.user.data.IS_ADMIN ? 
@@ -1181,54 +1110,17 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     <br/>
                                     <br />
                                     {submission_alert_dom}
+                                    
+                                    
                                 </Form>
-
-                                {/* DESCRIPTION WORK
-                                 <Form>
-                                <Form.Row>
-                                        <Form.Group as={Col} md="10">
-                                                <Form.Label>Descriptions</Form.Label>
-                                                <Form.Control
-                                                    value={desc.TEXT}
-                                                    onChange={onDescriptionHandler}
-                                                    name={desc.TEXT}
-                                                    required
-                                                    type="text"
-
-                                                />
-                                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="2">
-                                            <Form.Label>Queue Description</Form.Label>
-                                            <Button onClick={onDescriptionAdd} variant="success">Add</Button>
-                                        </Form.Group>
-                                        
-                                        {desc.DESC.map((item, index) => (
-                                        <Form.Group as={Col} md="8">
-                                            
-                                                <Form.Control
-                                                value={item}
-                                                name={item}
-                                                type="text"
-                                                key={index}
-                                                />
-                                            
-                                            <Button onClick={onDescriptionAdd} variant="danger">Delete</Button>
-                                        </Form.Group>
-                                        ))}
-                                        
-                                        
-                                       
-                                    </Form.Row>
-                                </Form> */}
 
                             </div>
 
-                            {/* <Alerts /> */}
                         </div>
                     </div>
                 </div>
             </div>
+        
         )
 }
 
@@ -1238,3 +1130,4 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, {saveCard})(NewCard)
+
