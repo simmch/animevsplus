@@ -6,123 +6,58 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { titleInitialState, enhancements } from '../STATE'
+import { titleInitialState, enhancements, unlock_methods, elements, title_abilities, title_explanations } from '../STATE';
 import { updateTitle, deleteTitle } from '../../actions/titles'
 
 export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
-    const [universes, setUniverse] = useState({
-        universe: [],
-        loading: true
-    });
-
+    const [universeList, setUniverseList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState(titleInitialState);
+    const [validated, setValidated] = useState(false);
+    const [show, setShow] = useState(false);
+    const [abilities, setAbilities] = useState([{ ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }]);
+    const [modalShow, setModalShow] = useState(false);
+    const handleClose = () => setModalShow(false);
+    const handleShow = () => setModalShow(true);
     const [titleData, setTitleData] = useState({
         loading: true
     })
 
-    const [data, setData] = useState(titleInitialState);
-    const [modalShow, setModalShow] = useState(false);
-    const handleClose = () => setModalShow(false);
-    const handleShow = () => setModalShow(true);
-    const [validated, setValidated] = useState(false);
-    const [show, setShow] = useState(false);
-    const [ability, setAbility] = useState({
-        POWER: 20,
-        ABILITY_TYPE: ""
-    });
-    // Build ability
-    var pass_power = ability.POWER
-    var pass_type = ability.ABILITY_TYPE
-    var abililty_Object = {}
-    abililty_Object[pass_type] = pass_power
-
-    const {
-        TITLE,
-        PRICE,
-        TOURNAMENT_REQUIREMENTS,
-        ABILITIES,
-        UNIVERSE,
-        COLLECTION,
-        STOCK,
-        AVAILABLE,
-        EXCLUSIVE
-    } = data;
-    
     useEffect(() => {
         if(!auth.loading){
             axios.get('/crown/universes')
                 .then((res) => {
-                    setUniverse({universe: res.data, loading: false})
-                })
+                    setUniverseList(res.data);
+                    setIsLoading(false);
+                });
 
             axios.get('/crown/titles')
                 .then((res) => {
                     setTitleData({data: res.data, loading: false})
+                    setIsLoading(false);
                 })
         }
       }, [auth])
 
     const onChangeHandler = (e) => {
-        setShow(false)
-        if (e.target.type === "number"){
-            setData({
-                ...data,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } else if ((e.target.checked === true || e.target.checked === false) && e.target.name == "formHorizontalRadios") {
-            const radio = e.currentTarget.id === 'false' ? false : true
-            setData({
-                ...data,
-                HAS_COLLECTION: radio
-            })
-        } else {
-            setData({
-                ...data,
-                [e.target.name]: e.target.value
-            })
-        }
-        
+        const { type, name, value, valueAsNumber } = e.target;
+        let newValue = type === "number" ? valueAsNumber : value;
+        setData(prevData => ({ ...prevData, [name]: newValue }));
     }
 
-    const availableHandler = (e) => {
-        setData({
-            ...data,
-            AVAILABLE: Boolean(e.target.value)
-        })
-    }
 
-    const exclusiveHandler = (e) => {
-        setData({
-            ...data,
-            EXCLUSIVE: Boolean(e.target.value)
-        })
-    }
-
-    const abilityHandler = (e) => {
-        if (e.target.type === "number"){
-            setAbility({
-                ...ability,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } 
-    }
-
-    if(!universes.loading) {
-        var universeSelector = universes.universe.map(universe => {
-            return {
-                value: universe.TITLE, label: `${universe.TITLE}`
-            }
-        })
-    
-        var universeHandler = (e) => {
-            let value = e[0]
-            universes.universe.map(universe => {
-                if (e.value === universe.TITLE) {
-                    setData({
-                        ...data,
-                        UNIVERSE: universe.TITLE,
-                    })
-                }
-            })
+    const handleSelectorChange = (selectedOption, actionMeta) => {
+        if (actionMeta.name === "universe") {
+            setData(prevData => ({ ...prevData, UNIVERSE: selectedOption.value }));
+        } else if (actionMeta.name.startsWith("ability-")) {
+            const index = parseInt(actionMeta.name.split("-")[1]);
+            const updatedAbilities = [...abilities];
+            updatedAbilities[index][actionMeta.name.split("-")[2]] = selectedOption.value;
+            setAbilities(updatedAbilities);
+        } else if (actionMeta.name === "unlock-method") {
+            setData(prevData => ({ ...prevData, UNLOCK_METHOD: { ...prevData.UNLOCK_METHOD, METHOD: selectedOption.value }}));
+        } else if (actionMeta.name === "unlock-element") {
+            setData(prevData => ({ ...prevData, UNLOCK_METHOD: { ...prevData.UNLOCK_METHOD, ELEMENT: selectedOption.value }}));
         }
     }
 
@@ -137,57 +72,24 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
             let value = e[0]
             titleData.data.map(title => {
                 if (e.value === title.TITLE) {
-                    // Passive Breakdown
-                    var type = Object.keys(title.ABILITIES[0])[0]
-                    var power = Object.values(title.ABILITIES[0])[0]
-
-                    setAbility({
-                        ...ability,
-                        POWER: power,
-                        ABILITY_TYPE: type
-                    })
-
-                    var pass_power = ability.POWER
-                    var pass_type = ability.PASSIVE_TYPE
-                    var abilities_Object = {}
-                    abilities_Object[pass_type] = pass_power
-
                     setData({
                         ...data,
                         TITLE: title.TITLE,
-                        PRICE: title.PRICE,
-                        TOURNAMENT_REQUIREMENTS: title.TOURNAMENT_REQUIREMENTS,
-                        ABILITIES: [abilities_Object],
+                        ABILITIES: [{ ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }],
                         UNIVERSE: title.UNIVERSE,
-                        COLLECTION: "N/A",
-                        STOCK: title.STOCK,
                         AVAILABLE: title.AVAILABLE,
-                        EXCLUSIVE: title.EXCLUSIVE
+                        RARITY: title.RARITY,
+                        UNLOCK_METHOD: title.UNLOCK_METHOD,
+                        ID: title.ID, 
                     })
+                    setAbilities(title.ABILITIES)
                 }
             })
         }
     }
 
-    var enhancementSelector = enhancements.map(enhancement => {
-        return {
-            value: enhancement, label: `${enhancement}`
-        }
-    })
 
-    var abilityEnhancementHandler = (e) => {
-        let value = e[0]
-        enhancements.map(enhancement => {
-            if (e.value === enhancement) {
-                setAbility({
-                    ...ability,
-                    ABILITY_TYPE: enhancement,
-                })
-            }
-        })
-
-    }
-    
+    console.log(data)
     var submission_response = "Success!";
     var submission_alert_dom = <Alert show={show} variant="success"> {submission_response} </Alert>
     const onSubmitHandler = async (e) => {
@@ -201,12 +103,12 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
             setValidated(false)
             e.preventDefault();
 
-            var title_update_data = data;
-            title_update_data.ABILITIES = [abililty_Object]
-            console.log(title_update_data)
-            const res = await updateTitle(title_update_data)
+            const updatedData = { ...data, ABILITIES: abilities };
+            console.log(data)
+            const res = await updateTitle(updatedData)
 
-            setData(titleInitialState)
+            setData(titleInitialState);
+            setAbilities([{ ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }]);
             setTimeout(()=> {setShow(true)}, 1000)
         }
 
@@ -216,127 +118,159 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
         const form = e.currentTarget;
         e.preventDefault();
         const res = await deleteTitle(data);
+        setData(titleInitialState);
+        setAbilities([{ ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }]);
         setModalShow(false);
     }
 
     const styleSheet = {
-        input: (base, state) => ({
-            ...base,
-            color: 'white'
-
-        })
+        input: base => ({ ...base, color: 'white' })
     };
-    return auth.loading || universes.loading ? (
+
+    const universeOptions = universeList.map(universe => ({ value: universe.TITLE, label: universe.TITLE }));
+    const titleAbilityOptions = title_abilities.map(ability => ({ value: ability, label: ability }));
+    const enhancementOptions = enhancements.map(enhancement => ({ value: enhancement, label: enhancement }));
+    const unlockMethodsOptions = unlock_methods.map(method => ({ value: method, label: method }));
+    const elementsOptions = elements.map(element => ({ value: element, label: element }));
+
+
+    return isLoading ? (
         <Spinner />
     ) : (
-            <div>
-                <div className="page-header">
-                    <h3 className="page-title">
-                        Update Title
-                    </h3>
-                </div>
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="card">
-                            <div className="card-body">
-                                <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
-                                    <Form.Row>
-                                        <Form.Group as={Col} md="6" controlId="validationCustom01">
-                                            <Form.Label><h3>Select Title</h3></Form.Label>
-                                            <Select
-                                                onChange={titleHandler}
-                                                options={
-                                                    titleSelector
-                                                }
-                                                styles={styleSheet}
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                        </Form.Group>
-                                    </Form.Row>
-
-                                    <Form.Row>
-
-                                    <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label>Power</Form.Label>
-                                            <Form.Control
-                                                value={ability.POWER}
-                                                name="POWER"
-                                                onChange={abilityHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                        <Form.Label>Type - {ability.ABILITY_TYPE}</Form.Label>
-                                            <Select
-                                                onChange={abilityEnhancementHandler}
-                                                options={
-                                                    enhancementSelector
-                                                }
-                                                required
-                                                styles={styleSheet}
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Price</Form.Label>
-                                            <Form.Control
-                                                value={PRICE}
-                                                name="PRICE"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Stock</Form.Label>
-                                            <Form.Control
-                                                value={STOCK}
-                                                name="STOCK"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Available </Form.Label>
-                                            
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={availableHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
-                                            
+        <div>
+            <div className="page-header">
+                <h3 className="page-title">
+                    Update Title
+                </h3>
+            </div>
+            <div className="row">
+                <div className="col-md-12 grid-margin">
+                    <div className="card">
+                        <div className="card-body">
+                            <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
+                                <Form.Row>
+                                    <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                        <Form.Label>Title Name</Form.Label>
+                                        <Select
+                                            onChange={titleHandler}
+                                            options={titleSelector}
+                                            styles={styleSheet}
+                                            name="TITLE"
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="6" controlId="validationCustom01">
+                                        <Form.Label>Select Universe - {data.UNIVERSE}</Form.Label>
+                                        <Select
+                                            onChange={handleSelectorChange}
+                                            options={universeOptions}
+                                            styles={styleSheet}
+                                            name="universe"
+                                        />
+                                    </Form.Group>
+                                </Form.Row>
+                                {abilities.map((ability, index) => (
+                                    <div key={index}>
+                                        <Form.Row>
+                                            <Form.Group as={Col} md="3">
+                                                <Form.Label>Ability</Form.Label>
+                                                <Select
+                                                    onChange={handleSelectorChange}
+                                                    options={titleAbilityOptions}
+                                                    name={`ability-${index}-ABILITY`}
+                                                    value={{ value: ability.ABILITY, label: ability.ABILITY }}
+                                                />                                                    
                                             </Form.Group>
-                                            <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label> Exclusive </Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={exclusiveHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
+                                            <Form.Group as={Col} md="3">
+                                                <Form.Label>Power</Form.Label>
+                                                <Form.Control
+                                                    value={ability.POWER}
+                                                    onChange={(e) => {
+                                                        const updatedAbilities = [...abilities];
+                                                        updatedAbilities[index].POWER = e.target.valueAsNumber;
+                                                        setAbilities(updatedAbilities);
+                                                    }}
+                                                    name={`ability-${index}-POWER`}
+                                                    required
+                                                    type="number"
+                                                />
                                             </Form.Group>
-                                    </Form.Row>
-                                    <Button type="submit">Update Title</Button>
+                                            <Form.Group as={Col} md="3">
+                                                <Form.Label>Element</Form.Label>
+                                                <Select
+                                                    onChange={handleSelectorChange}
+                                                    options={elementsOptions}
+                                                    name={`ability-${index}-ELEMENT`}
+                                                    value={{ value: ability.ELEMENT, label: ability.ELEMENT }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group as={Col} md="3">
+                                                <Form.Label>Duration</Form.Label>
+                                                <Form.Control
+                                                    value={ability.DURATION}
+                                                    onChange={(e) => {
+                                                        const updatedAbilities = [...abilities];
+                                                        updatedAbilities[index].DURATION = e.target.valueAsNumber;
+                                                        setAbilities(updatedAbilities);
+                                                    }}
+                                                    name={`ability-${index}-DURATION`}
+                                                    required
+                                                    type="number"
+                                                />
+                                            </Form.Group>
+                                        </Form.Row>
+                                        {abilities.length > 1 && (
+                                            <Button
+                                                variant="danger"
+                                                onClick={() => {
+                                                    const updatedAbilities = [...abilities];
+                                                    updatedAbilities.splice(index, 1);
+                                                    setAbilities(updatedAbilities);
+                                                }}
+                                            >
+                                                Remove Ability
+                                            </Button>
+                                        )}
+                                    </div>
+                                ))}
+                                {abilities.length < 3 && (
+                                    <Button
+                                        onClick={() => setAbilities([...abilities, { ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }])}
+                                    >
+                                        Add Ability
+                                    </Button>
+                                )}
+                                
+                                <Form.Row>
+                                    <Form.Group as={Col} md="4">
+                                        <Form.Label>Unlock Value</Form.Label>
+                                        <Form.Control
+                                            value={data.UNLOCK_METHOD.VALUE}
+                                            onChange={onChangeHandler}
+                                            name="VALUE"
+                                            required
+                                            type="number"
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="4">
+                                        <Form.Label>Unlock Element</Form.Label>
+                                        <Select
+                                            onChange={handleSelectorChange}
+                                            options={elementsOptions}
+                                            name="unlock-element"
+                                            value={{ value: data.UNLOCK_METHOD.ELEMENT, label: data.UNLOCK_METHOD.ELEMENT } ?? ""}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} md="4">
+                                        <Form.Label>Unlock Method</Form.Label>
+                                        <Select
+                                            onChange={handleSelectorChange}
+                                            options={unlockMethodsOptions}
+                                            name="unlock-method"
+                                            value={{ value: data.UNLOCK_METHOD.METHOD, label: data.UNLOCK_METHOD.METHOD } ?? ""}
+                                        />
+                                    </Form.Group>
+                                </Form.Row>
+                                <Button type="submit">Update Title</Button>
                                     <br/>
                                     <br />
                                     <Link to="/newtitle"><Button as={Col} md="2" variant="outline-warning">New Title</Button></Link> 
@@ -359,19 +293,24 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
                                         </Button>
                                         </Modal.Footer>
                                     </Modal>
-                                    
-                                    
+                            </Form>
+                        </div>
 
-                                </Form>
-
-                            </div>
-
-                            {/* <Alerts /> */}
+                        <div>
+                        <h2>Ability Titles and Explanations</h2>
+                        <ul>
+                            {Object.entries(title_explanations).map(([title, explanation]) => (
+                            <li key={title}>
+                                <strong>{title}:</strong> {explanation}
+                            </li>
+                            ))}
+                        </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        )
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => ({

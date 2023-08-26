@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import Spinner from '../isLoading/spinner';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { titleInitialState, enhancements, unlock_methods, elements } from '../STATE';
+import { titleInitialState, enhancements, unlock_methods, elements, title_abilities, title_explanations } from '../STATE';
 import { saveTitle } from '../../actions/titles';
 
-export const NewTitle = ({ auth, saveTitle }) => {
+export const NewTitle = ({ auth, history, saveTitle }) => {
     const [universeList, setUniverseList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState(titleInitialState);
@@ -49,16 +49,23 @@ export const NewTitle = ({ auth, saveTitle }) => {
 
     console.log(data)
 
+    var submission_response = "Success!";
+    var submission_alert_dom = <Alert show={show} variant="success"> {submission_response} </Alert>
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
+            e.stopPropagation();
+            setShow(false)
             setValidated(true);
         } else {
             setValidated(false);
+            e.preventDefault();
             const updatedData = { ...data, ABILITIES: abilities, ID: Math.floor(Math.random() * 10000000).toString() };
-            await saveTitle(updatedData);
+            console.log(data)
+            const res = await saveTitle(updatedData);
             setData(titleInitialState);
+            setAbilities([{ ABILITY: "", POWER: 0, ELEMENT: "", DURATION: 0 }]);
             setTimeout(() => { setShow(true) }, 1000);
         }
     }
@@ -68,17 +75,18 @@ export const NewTitle = ({ auth, saveTitle }) => {
     };
 
     const universeOptions = universeList.map(universe => ({ value: universe.TITLE, label: universe.TITLE }));
+    const titleAbilityOptions = title_abilities.map(ability => ({ value: ability, label: ability }));
     const enhancementOptions = enhancements.map(enhancement => ({ value: enhancement, label: enhancement }));
     const unlockMethodsOptions = unlock_methods.map(method => ({ value: method, label: method }));
     const elementsOptions = elements.map(element => ({ value: element, label: element }));
 
-    return isLoading ? (
+    return auth.loading ? (
         <Spinner />
     ) : (
         <div>
             <div className="page-header">
                 <h3 className="page-title">
-                    New Crown Unlimited Title
+                    New Title
                 </h3>
             </div>
             <div className="row">
@@ -112,16 +120,12 @@ export const NewTitle = ({ auth, saveTitle }) => {
                                         <Form.Row>
                                             <Form.Group as={Col} md="3">
                                                 <Form.Label>Ability</Form.Label>
-                                                <Form.Control
-                                                    value={ability.ABILITY}
-                                                    onChange={(e) => {
-                                                        const updatedAbilities = [...abilities];
-                                                        updatedAbilities[index].ABILITY = e.target.value;
-                                                        setAbilities(updatedAbilities);
-                                                    }}
+                                                <Select
+                                                    onChange={handleSelectorChange}
+                                                    options={titleAbilityOptions}
                                                     name={`ability-${index}-ABILITY`}
-                                                    required
-                                                />
+                                                    value={{ value: ability.ABILITY, label: ability.ABILITY }}
+                                                />                                                    
                                             </Form.Group>
                                             <Form.Group as={Col} md="3">
                                                 <Form.Label>Power</Form.Label>
@@ -182,6 +186,7 @@ export const NewTitle = ({ auth, saveTitle }) => {
                                         Add Ability
                                     </Button>
                                 )}
+                                
                                 <Form.Row>
                                     <Form.Group as={Col} md="4">
                                         <Form.Label>Unlock Value</Form.Label>
@@ -221,8 +226,19 @@ export const NewTitle = ({ auth, saveTitle }) => {
                                     }
                                     <br/>
                                     <br />
-                                    {/* {submission_alert_dom} */}
+                                    {submission_alert_dom}
                             </Form>
+                        </div>
+
+                        <div>
+                        <h2>Ability Titles and Explanations</h2>
+                        <ul>
+                            {Object.entries(title_explanations).map(([title, explanation]) => (
+                            <li key={title}>
+                                <strong>{title}:</strong> {explanation}
+                            </li>
+                            ))}
+                        </ul>
                         </div>
                     </div>
                 </div>

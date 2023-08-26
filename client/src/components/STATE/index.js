@@ -131,6 +131,49 @@ export const tactics = [
     'BLOODLUST'
 ]
 
+
+export const title_explanations = {
+    'ATK': 'Increases your attack by % each turn',
+    'DEF': 'Increases your defense by % each turn',
+    'STAM': 'Increases your stamina by % each turn',
+    'HLT': ' Heals you for % of your current health each turn',
+    'LIFE': 'Steals % of your opponent\'s health each turn',
+    'DRAIN': 'Drains % opponent stamina each turn',
+    'FLOG': 'Steals % opponent attack each turn',
+    'WITHER': 'Steals % opponent defense each turn',
+    'RAGE': 'Decreases your defense to increase your AP by % each turn',
+    'BRACE': 'Decreases your attack to increase your AP by % each turn',
+    'BZRK': 'Decreases your health to increase your attack by % each turn',
+    'CRYSTAL': 'Decreases your health to increase your defense by % each turn',
+    'GROWTH': 'Decreases your max health to increase your attack, defense, and AP by % each turn',
+    'FEAR': 'Decreases your max health to decrease your opponent\'s attack, defense, and AP by % each turn',
+    'STANCE': 'Swaps your attack and defense stats, increasing your attack by % each turn',
+    'CONFUSE': 'Swaps opponent\'s attack and defense stats, decreasing their attack by % each turn',
+    'CREATION': 'Increases your max health by % each turn',
+    'DESTRUCTION': 'Decreases opponent\'s max health by % each turn',
+    'SPEED': 'Increases your speed by % each focus',
+    'SLOW': ' Decreases turn count by  Turn',
+    'HASTE': ' Increases turn count by  Turn',
+    'SOULCHAIN': 'Prevents focus stat buffs',
+    'GAMBLE': 'Randomizes focus stat buffs',
+    'SINGULARITY': 'Increases resolve buff by %',
+    'IQ': ' Increases focus buffs by  %',
+    'HIGH IQ': 'Continues focus buffs after resolve',
+    'BLITZ': 'Hit through parries',
+    'FORESIGHT': 'Parried hits deal 10% damage to yourself',
+    'OBLITERATE': 'Hit through shields',
+    'IMPENETRABLE SHIELD': 'Shields cannot be penetrated',
+    'PIERCE': 'Hit through all barriers',
+    'SYNTHESIS': 'Hits to your barriers store 50% of damage dealt, you heal from this amount on resolve.',
+    'SPELL SHIELD': 'All shields will absorb elemental damage healing you',
+    'ELEMENTAL BUFF': 'Increase elemental damage by 35%',
+    'ELEMENTAL DEBUFF': 'Decrease opponent\'s elemental damage by 35%',
+    'ENHANCED GUARD': 'Negates 80% of damage when blocking, prevents critical hits.',
+    'STRATEGIST': 'Hits through all guards',
+    'SHARPSHOOTER': 'Attacks never miss',
+    'DIVINITY': 'Ignore elemental effects until resolved',
+}
+
 // Unlock Methods
 // # Tales completed {TYPE: "TALES", "VALUE": "1"}
 // # Dungeons completed {TYPE: "DUNGEONS", "VALUE": "1"}
@@ -271,7 +314,8 @@ export const elements = [
     "RECKLESS",
     "BARRIER",
     "PARRY",
-    "SHIELD"
+    "SHIELD",
+    "N/A"
 ]
 
 export const arm_enhancements = [
