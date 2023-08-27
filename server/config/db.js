@@ -4,7 +4,9 @@ require("dotenv").config();
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.mongoURI, {
+    // Currently using mongoUI_TEST_STAGE for storing testing data
+    // Switch to mongoURI for production data
+    await mongoose.connect(process.env.mongoURI_TEST_STAGE, {
       useNewUrlParser: true,
       useCreateIndex: true
     });
