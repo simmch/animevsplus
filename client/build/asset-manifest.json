@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.6e129cc4.css",
-    "main.js": "/static/js/main.341a5f03.js",
-    "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.21d6dd0b5b32336e7cff.eot",
-    "static/media/materialdesignicons-webfont.ttf?v=5.0.45": "/static/media/materialdesignicons-webfont.f60b16c8d4cd35506d0b.ttf",
+    "main.css": "/static/css/main.05667eb4.css",
+    "main.js": "/static/js/main.a545933a.js",
+    "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.53f53f50a1b2033979f5.eot",
+    "static/media/materialdesignicons-webfont.ttf?v=5.9.55": "/static/media/materialdesignicons-webfont.0e4e0b3da55fa7faa77b.ttf",
+    "static/media/materialdesignicons-webfont.woff?v=5.9.55": "/static/media/materialdesignicons-webfont.d8e8e0f7931afa097409.woff",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
-    "static/media/materialdesignicons-webfont.woff?v=5.0.45": "/static/media/materialdesignicons-webfont.bd5c85afa91031c7cdca.woff",
+    "static/media/materialdesignicons-webfont.woff2?v=5.9.55": "/static/media/materialdesignicons-webfont.e9db4005489e24809b62.woff2",
     "static/media/typicons.svg?": "/static/media/typicons.1308fe66968dbc8931e5.svg",
-    "static/media/materialdesignicons-webfont.woff2?v=5.0.45": "/static/media/materialdesignicons-webfont.eacc60984c4a668938dd.woff2",
-    "static/media/Simple-Line-Icons.svg?v=2.4.0": "/static/media/Simple-Line-Icons.809e55bbb1903c630920.svg",
+    "static/media/Simple-Line-Icons.svg?v=2.4.0": "/static/media/Simple-Line-Icons.f1515a459c8850890812.svg",
     "static/media/themify.svg": "/static/media/themify.c4292f34297f1004471a.svg",
     "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
     "static/media/fontawesome-webfont.ttf?v=4.7.0": "/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
@@ -36,11 +36,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.6e129cc4.css.map": "/static/css/main.6e129cc4.css.map",
-    "main.341a5f03.js.map": "/static/js/main.341a5f03.js.map"
+    "main.05667eb4.css.map": "/static/css/main.05667eb4.css.map",
+    "main.a545933a.js.map": "/static/js/main.a545933a.js.map"
   },
   "entrypoints": [
-    "static/css/main.6e129cc4.css",
-    "static/js/main.341a5f03.js"
+    "static/css/main.05667eb4.css",
+    "static/js/main.a545933a.js"
   ]
 }
