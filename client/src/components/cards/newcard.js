@@ -409,6 +409,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         }
     }
 
+    const skipGenerationClick = (e) => {
+        e.preventDefault()
+        setAiToggle(true)
+    }
+
 
     var enhancementSelector = enhancements.map(enhancement => {
         return {
@@ -587,6 +592,16 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     >
                                         {aiToggleFailure ? 'Generation Failed, please click here to try again' : 'Generate Card Data'}
                                     </Button>
+                                    <br />
+                                    <Button
+                                        style={{ display: !aiToggle ? 'block' : 'none' }}
+                                        variant="warning"
+                                        type="button"
+                                        onClick={skipGenerationClick}
+                                    >
+                                        Skip AI Generation
+                                    </Button>
+
                                     <br />
                                     {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatecards"><Button variant="warning" style={{ display: !aiToggle ? 'block' : 'none' }}>Update Cards</Button></Link> 

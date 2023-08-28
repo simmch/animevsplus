@@ -39,10 +39,14 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
         }
       }, [auth])
 
-    const onChangeHandler = (e) => {
+      const onChangeHandler = (e) => {
         const { type, name, value, valueAsNumber } = e.target;
         let newValue = type === "number" ? valueAsNumber : value;
-        setData(prevData => ({ ...prevData, [name]: newValue }));
+        if(name === "unlock-value") {
+            setData(prevData => ({ ...prevData, UNLOCK_METHOD: { ...prevData.UNLOCK_METHOD, VALUE: newValue, SCENARIO_DROP: false }}));
+        } else {
+            setData(prevData => ({ ...prevData, [name]: newValue }));
+        }
     }
 
 
@@ -246,7 +250,7 @@ export const UpdateTitle = ({auth, history, updateTitle, deleteTitle}) => {
                                         <Form.Control
                                             value={data.UNLOCK_METHOD.VALUE}
                                             onChange={onChangeHandler}
-                                            name="VALUE"
+                                            name="unlock-value"
                                             required
                                             type="number"
                                         />
