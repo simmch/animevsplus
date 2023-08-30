@@ -133,7 +133,22 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
             HLT: 2000,
             atkDef: 500,
             apValues: 800
-        }
+        },
+        8: {
+            HLT: 2050,
+            atkDef: 525,
+            apValues: 850
+        },
+        9: {
+            HLT: 2100,
+            atkDef: 550,
+            apValues: 900
+        },
+        10: {
+            HLT: 2150,
+            atkDef: 575,
+            apValues: 950
+        },
     };
     
     function setTierDefaults(type, value) {
