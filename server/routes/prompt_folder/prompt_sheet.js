@@ -65,7 +65,7 @@ const card_creation_prompt_function = (name, universe) => {
     'DESTRUCTION',
     ]
     
-    Tiers are 1 to 7, with  1 being the weakest and 7 being the strongest. The Tier breakdown for adjustable stats are as follows - (Attack_Defense value needs to be split between attack and defense. For example, if the card is Tier 5 and the Attack_Defense value is 450, the Attack value can be 200 while defense can be 250. Likewise, the Ability_Power_Values is splitable for normal attack power, special attack power, and ultimate attack power).
+    Tiers are 1 to 10, with  1 being the weakest and 10 being the strongest. The Tier breakdown for adjustable stats are as follows - (Attack_Defense value needs to be split between attack and defense. For example, if the card is Tier 5 and the Attack_Defense value is 450, the Attack value can be 200 while defense can be 250. Likewise, the Ability_Power_Values is splitable for normal attack power, special attack power, and ultimate attack power).
     1: {
         Health: 1725,
         Attack_Defense: 325,
@@ -100,6 +100,21 @@ const card_creation_prompt_function = (name, universe) => {
         Health: 2000,
         Attack_Defense: 500,
         Ability_Power_Values: 800
+    },
+    8: {
+        Health: 2050,
+        Attack_Defense: 525,
+        Ability_Power_Values: 850
+    },
+    9: {
+        Health: 2100,
+        Attack_Defense: 550,
+        Ability_Power_Values: 900
+    },
+    10: {
+        Health: 2150,
+        Attack_Defense: 575,
+        Ability_Power_Values: 950
     }
 
     The Speed stat is based on the following:
