@@ -41,6 +41,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     })
 
     const [aiToggle, setAiToggle] = useState(false);
+    const [aiToggleLoading, setAiToggleLoading] = useState(false);
     const [aiToggleFailure, setAiToggleFailure] = useState(false);
     const [data, setData] = useState(cardInitialState);
     const [validated, setValidated] = useState(false);
@@ -347,6 +348,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
     const onClickAi = async (e) => {
         try {
+            setAiToggleLoading(true)
             // e.preventDefault()
             const res = await axios.get(`/crown/ai/prompt/${data.NAME}/${data.UNIVERSE}`)
             if(res){
@@ -410,6 +412,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                     POTENTIAL_MOVE5_POWER: res.data.potential_ability5_power,
                 })
                 setAiToggle(true)
+                setAiToggleLoading(false)
             } else {
                 setAiToggleFailure(true)
                 // Set 5 second timeout until it auto flips back to false
@@ -557,7 +560,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
         })
     };
-    return auth.loading || universes.loading ? (
+    return auth.loading || universes.loading || aiToggleLoading ? (
         <Spinner />
     ) : (
             <div>

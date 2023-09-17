@@ -240,4 +240,18 @@ router.delete("/delete", auth, async (req, res) => {
     }
 })
 
+
+// @route   DELETE crown/cards/delete
+// @desc    Delete a card
+// @access  Public
+router.get("/delete/universe/:universe", async (req, res) => {
+    console.log("Hello World")
+    try {
+        await Card.deleteMany({ 'UNIVERSE': req.params.universe })
+        res.status(200).send("Cards in this universe have been successfully removed. ")
+    } catch (err) {
+        res.status(500).send("Server Error")
+    }
+})
+
 module.exports = router
