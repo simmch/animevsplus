@@ -13,7 +13,7 @@ export const cardInitialState = {
     ATK: null,
     DEF: null,
     TYPE: 0,
-    TIER: null,
+    TIER: 0,
     PASS: [],
     SPD: null,
     VUL: false,

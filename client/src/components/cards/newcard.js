@@ -20,7 +20,9 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     });
     const [defaults, setDefaults] = useState({
         apValues: 0,
-        atkDef: 0
+        atkDef: 0, 
+        ad_points_left: 0,
+        ap_points_left: 0
     })
     const [moveOptions, setMoveOptions] = useState({
         POTENTIAL_MOVE1: "",
@@ -184,8 +186,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             });
             
             setDefaults({
+                ...defaults,
                 atkDef: tierConfig[value].atkDef,
-                apValues: tierConfig[value].apValues
+                apValues: tierConfig[value].apValues,
+                ad_points_left: tierConfig[value].atkDef - (ATK + DEF),
+                ap_points_left: tierConfig[value].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)
             });
         }
     }
@@ -201,7 +206,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 ...prevData,
                 [name]: valueAsNumber
             }));
-            setTierDefaults(name, valueAsNumber, data.TIER);
+            setTierDefaults(name, valueAsNumber);
             return;
         }
     
@@ -372,26 +377,41 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                     ID: randomCode.toString()
                 })
 
+                console.log(parseInt(res.data.tier, 10))
+                console.log(tierConfig[parseInt(res.data.tier, 10)])
+                if(parseInt(res.data.tier, 10) > 0){
+                    setDefaults({
+                        ...defaults,
+                        atkDef: tierConfig[parseInt(res.data.tier, 10)].atkDef,
+                        apValues: tierConfig[parseInt(res.data.tier, 10)].apValues,
+                        ad_points_left: tierConfig[parseInt(res.data.tier, 10)].atkDef - (ATK + DEF),
+                        ap_points_left: tierConfig[parseInt(res.data.tier, 10)].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)
+                    });
+        
+                }
+
                 setPassive({
                     ...passive,
                     ABILITY: res.data.passive_ability_name,
                     PASSIVE_TYPE: res.data.passive_ability_type,
                 })
 
+
                 setMoves({
                     ...moves,
                     MOVE1_ABILITY: res.data.normal_attack_name,
-                    MOVE1_POWER: res.data.normal_attack_power,
+                    MOVE1_POWER: parseInt(res.data.normal_attack_power),
                     MOVE1_ELEMENT: res.data.normal_attack_element.toUpperCase(),
                     MOVE2_ABILITY: res.data.special_attack_name,
-                    MOVE2_POWER: res.data.special_attack_power,
+                    MOVE2_POWER: parseInt(res.data.special_attack_power),
                     MOVE2_ELEMENT: res.data.special_attack_element.toUpperCase(),
                     MOVE3_ABILITY: res.data.ultimate_attack_name,
-                    MOVE3_POWER: res.data.ultimate_attack_power,
+                    MOVE3_POWER: parseInt(res.data.ultimate_attack_power),
                     MOVE3_ELEMENT: res.data.ultimate_attack_element.toUpperCase(),
                     ENHANCER_ABILITY: res.data.enhancement_ability_name,
                     ENHANCEMENT_TYPE: res.data.enhancement_ability_type.toUpperCase(),
                 })
+
 
                 setMoveOptions({
                     ...moveOptions,
@@ -411,6 +431,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                     POTENTIAL_MOVE5_ELEMENT: res.data.potential_ability5_element.toUpperCase(),
                     POTENTIAL_MOVE5_POWER: res.data.potential_ability5_power,
                 })
+
                 setAiToggle(true)
                 setAiToggleLoading(false)
             } else {
@@ -421,7 +442,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 }
                 , 5000)
             }
-
         } catch (err) {
             console.error(err)
         }
