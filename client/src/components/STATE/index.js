@@ -249,7 +249,8 @@ export const drop_styles = [
     "DUNGEON",
     "SCENARIO",
     "BOSS",
-    "RAID"
+    "RAID",
+    "DESTINY"
 ]
 
 export const classes = [
