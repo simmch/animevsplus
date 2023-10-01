@@ -80,8 +80,12 @@ router.get("/universe/list/:universe", async (req, res) => {
         if (!cards) {
             res.status(400).send("Card not found.")
         } else {
-            const cardNames = cards.map(card => card.NAME);
-            res.json(cardNames);
+            const cardNames = cards.map(card => { return { NAME: card.NAME, TIER: card.TIER} });
+            let message = []
+            cardNames.forEach(card => {
+                message.push(`${card.NAME} (${card.TIER})`)
+            })
+            res.json(message);
         }
     } catch (err) {
         console.error(err.message);

@@ -38,6 +38,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/crown/cloudinary", require("./routes/api/cloudinary_api"))
 app.use("/crown/cards", require("./routes/api/card_api"))
 app.use("/crown/pets", require("./routes/api/pet_api"))
 app.use("/crown/titles", require("./routes/api/titles_api"))
