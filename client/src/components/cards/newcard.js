@@ -41,7 +41,16 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         POTENTIAL_MOVE5_ELEMENT: "",
         POTENTIAL_MOVE5_POWER: null,
     })
-
+    const [images, setImages] = useState({
+        loading: true,
+        images_available: false,
+        base_image_url: "",
+        focus_image_url: "",
+        resolve_image_url: "",
+        list_of_images: []
+    })
+    const [selectImageToggle, setSelectImageToggle] = useState(false);
+    const [insertImageToggle, setInsertImageToggle] = useState(false);
     const [aiToggle, setAiToggle] = useState(false);
     const [aiToggleLoading, setAiToggleLoading] = useState(false);
     const [aiToggleFailure, setAiToggleFailure] = useState(false);
@@ -350,6 +359,69 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         
     };
 
+    const onClickSelectImage = async (e) => {
+        e.preventDefault()
+        setSelectImageToggle(!selectImageToggle)
+        const res = await axios.get(`/crown/cloudinary/${data.NAME}`)
+        console.log(res.data)
+        if(res){
+            setImages({
+                ...images,
+                list_of_images: res.data,
+                loading: false
+            })
+        }
+    }
+
+    
+    if(!images.loading) {
+        if(images.list_of_images.length > 0){
+                var images_selector = images.list_of_images.map(image => {
+                    return {
+                        value: image.url, label: `${image.filename}`
+                    }
+                }
+            )
+        }
+
+
+        var baseImageHandler = (e) => {
+            let value = e[0]
+            images.list_of_images.map(image => {
+                if (e.value === image.url) {
+                    setData({
+                        ...data,
+                        PATH: image.url,
+                    })
+                }
+            })
+        };
+
+        var focusImageHandler = (e) => {
+            let value = e[0]
+            images.list_of_images.map(image => {
+                if (e.value === image.url) {
+                    setData({
+                        ...data,
+                        FPATH: image.url,
+                    })
+                }
+            })
+        };
+
+        var resolveImageHandler = (e) => {
+            let value = e[0]
+            images.list_of_images.map(image => {
+                if (e.value === image.url) {
+                    setData({
+                        ...data,
+                        RPATH: image.url,
+                    })
+                }
+            })
+        };
+    }
+
 
     const onClickAi = async (e) => {
         try {
@@ -630,7 +702,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     >
                                         {aiToggleFailure ? 'Generation Failed, please click here to try again' : 'Generate Card Data'}
                                     </Button>
-                                    <br />
+                                    <br style={{ display: !aiToggle ? 'block' : 'none' }} />
                                     <Button
                                         style={{ display: !aiToggle ? 'block' : 'none' }}
                                         variant="warning"
@@ -640,12 +712,12 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         Skip AI Generation
                                     </Button>
 
-                                    <br />
+                                    <br style={{ display: !aiToggle ? 'block' : 'none' }} />
                                     {auth.user.data.IS_ADMIN ? 
                                     <Link to="/updatecards"><Button variant="warning" style={{ display: !aiToggle ? 'block' : 'none' }}>Update Cards</Button></Link> 
                                     : <span></span>
                                     }
-                                    <br />
+                                    <br style={{ display: !aiToggle ? 'block' : 'none' }} />
                                     
                                 </Form>
                             </div>
@@ -656,10 +728,75 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 <div className="row" style={{ display: aiToggle ? 'block' : 'none' }}>
                     <div className="col-md-12 grid-margin">
                         <div className="card">
-                            <div className="card-body">
-                                <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
-                                    <Form.Row>
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                            <Button
+                                style={{ display: !insertImageToggle ? 'block' : 'none' }}
+                                variant="primary"
+                                type="button"
+                                onClick={onClickSelectImage}
+                            >
+                                {selectImageToggle ? 'Hide Image Selector' : 'Show Image Selector'}
+                            </Button>
+                            <br />
+                            <Button
+                                style={{ display: !selectImageToggle ? 'block' : 'none' }}
+                                variant="primary"
+                                type="button"
+                                onClick={() => setInsertImageToggle(!insertImageToggle)}
+                            >
+                                {insertImageToggle ? 'Hide Insert Image Url Form' : 'Show Insert Image Url Form'}
+                            </Button>
+                            <br />
+                            <div className="card-body" style={{ display: selectImageToggle ? 'block' : 'none' }}>
+                                    <Form>
+                                        <Form.Row>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Base Image Path</Form.Label>
+                                            <Select
+                                                onChange={baseImageHandler}
+                                                options={
+                                                    images_selector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+
+
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Focused Image Path</Form.Label>
+                                            <Select
+                                                onChange={focusImageHandler}
+                                                options={
+                                                    images_selector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+
+
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Resolved Image Path</Form.Label>
+                                            <Select
+                                                onChange={resolveImageHandler}
+                                                options={
+                                                    images_selector
+                                                }
+                                                required
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                        </Form.Row>
+                                    </Form>
+                            </div>
+                            
+                            <div className="card-body" style={{ display: insertImageToggle ? 'block' : 'none' }}>
+                                    <Form>
+                                        <Form.Row>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Base Image Path</Form.Label>
                                             <Form.Control
                                                 value={PATH}
@@ -673,7 +810,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
 
 
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Focused Image Path</Form.Label>
                                             <Form.Control
                                                 value={FPATH}
@@ -687,7 +824,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
 
 
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label>Resolved Image Path</Form.Label>
                                             <Form.Control
                                                 value={RPATH}
@@ -699,9 +836,25 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
-                                            
+                                        </Form.Row>
+                                    </Form>
+                            </div>
+                            <br />
+                            {data.PATH ? <img src={data.PATH} alt='Base Image' style={{ width: '50%', height: '50%' }} /> : <span>No Base Image</span>}
+                            {data.FPATH ? <img src={data.FPATH} alt='Focus Image' style={{ width: '50%', height: '50%' }} /> : <span>No Focus Image</span>}
+                            {data.RPATH ? <img src={data.RPATH} alt='Resolve Image' style={{ width: '50%', height: '50%' }} /> : <span>No Resolve Image</span>}
 
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row" style={{ display: aiToggle ? 'block' : 'none' }}>
+                    <div className="col-md-12 grid-margin">
+                        <div className="card">
+                            <div className="card-body">
+                                <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
+                                    <Form.Row>
+                                    <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Ultimate Ability GIF</Form.Label>
                                             <Form.Control
                                                 value={GIF}
@@ -714,9 +867,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-                                    </Form.Row>
-                                    
-                                    <Form.Row>
+
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
                                         <Form.Label>Card Class - {CLASS}</Form.Label>
                                             <Select
@@ -1166,7 +1317,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     
                                     
                                 </Form>
-
                             </div>
 
                         </div>
