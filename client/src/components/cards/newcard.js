@@ -435,7 +435,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
                 setData({
                     ...data,
-                    CLASS: res.data.card_class,
+                    CLASS: res.data.card_class.toUpperCase(),
                     TIER: parseInt(res.data.tier, 10),
                     HLT: parseInt(res.data.health, 10),
                     ATK: parseInt(res.data.attack, 10),
