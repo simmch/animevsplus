@@ -637,6 +637,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             const res = await saveCard(data)
 
             setData(cardInitialState)
+            setAiToggle(false)
             console.log(data)
             setTimeout(()=> {setShow(true)}, 1000)
         }
