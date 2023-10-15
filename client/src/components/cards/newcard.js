@@ -884,7 +884,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         <Form.Group as={Col} md="10" controlId="validationCustom02">
                                             <Form.Label>Character Name</Form.Label>
                                             <Form.Control
-                                                as="textarea"
+                                                type="text"
                                                 value={NAME}
                                                 name="NAME"
                                                 onChange={onChangeHandler}
