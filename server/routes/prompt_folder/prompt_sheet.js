@@ -3,17 +3,17 @@ const card_creation_prompt_function = (name, universe) => {
     In a card game with the following character data required, please fill out the form for the character ${name} from the ${universe} manga / anime with as much accuracy as possible to the characters abilities we see in the source material following the instructions below.
 
     Available Card Classes are as follows = ["Fighter", "Mage", "Ranger", "Tank", "Healer", "Assassin", "Swordsman", "Summoner", "Monstrosity"]
-    - Fighter: A character that specializes in close range combat and uses no weapons.
-    - Mage: A character that specializes in long range combat with magic and does not heal.
-    - Ranger: A character that specializes in long range combat with weapons.
-    - Tank: A character that specializes in defensive combat.
-    - Healer: A character that specializes in healing.
-    - Assassin: A character that specializes in close range combat using poisons and other devious tricks.
-    - Swordsman: A character that specializes in close range combat with swords.
-    - Summoner: A character that specializes in summoning.
-    - Monstrosity: A character that is largely a monster..
+    - Fighter: This character specializes in close range combat and uses no weapons.
+    - Mage: This character specializes in long range combat with magic and does not heal.
+    - Ranger: This character specializes in long range combat with weapons.
+    - Tank: This character specializes in defensive combat.
+    - Healer: This character specializes in healing.
+    - Assassin: This character specializes in close range combat using poisons and other devious tricks.
+    - Swordsman: This character specializes in close range combat with swords.
+    - Summoner: This character specializes in summoning.
+    - Monstrosity: This character is largely a monster.
 
-    Available Elements =  [
+    Available Elements for Moves =  [
         "Physical",
         "Fire",
         "Ice",
@@ -65,57 +65,9 @@ const card_creation_prompt_function = (name, universe) => {
     'DESTRUCTION',
     ]
     
-    Tiers are 1 to 10, with  1 being the weakest and 10 being the strongest. The Tier breakdown for adjustable stats are as follows - (Attack_Defense value needs to be split between attack and defense. For example, if the card is Tier 5 and the Attack_Defense value is 450, the Attack value can be 200 while defense can be 250. Likewise, the Ability_Power_Values is splitable for normal attack power, special attack power, and ultimate attack power).
-    1: {
-        Health: 1725,
-        Attack_Defense: 325,
-        Ability_Power_Values: 500
-    },
-    2: {
-        Health: 1750,
-        Attack_Defense: 350,
-        Ability_Power_Values: 550
-    },
-    3: {
-        Health: 1800,
-        Attack_Defense: 400,
-        Ability_Power_Values: 600
-    },
-    4: {
-        Health: 1850,
-        Attack_Defense: 425,
-        Ability_Power_Values: 650
-    },
-    5: {
-        Health: 1900,
-        Attack_Defense: 450,
-        Ability_Power_Values: 700
-    },
-    6: {
-        Health: 1950,
-        Attack_Defense: 475,
-        Ability_Power_Values: 750
-    },
-    7: {
-        Health: 2000,
-        Attack_Defense: 500,
-        Ability_Power_Values: 800
-    },
-    8: {
-        Health: 2050,
-        Attack_Defense: 525,
-        Ability_Power_Values: 850
-    },
-    9: {
-        Health: 2100,
-        Attack_Defense: 550,
-        Ability_Power_Values: 900
-    },
-    10: {
-        Health: 2150,
-        Attack_Defense: 575,
-        Ability_Power_Values: 950
-    }
+    Tiers are 1 to 10, with  1 being the weakest and 10 being the strongest.
+
+    The combat style is based on if the character is OFFENSIVE, DEFENSIVE, or BALANCED. The combat_style can only be one of the three, based on how they fight in the anime or manga.
 
     The Speed stat is based on the following:
     1 to 100 with 1 being the absolute slowest and 100 being near instantaneous speed.
@@ -123,9 +75,7 @@ const card_creation_prompt_function = (name, universe) => {
     Please Fill out the card information below, as accurate to the source as possible, with the following format that is provided below:
     card_class:
     tier:
-    health:
-    attack:
-    defense:
+    combat_style:
     speed:
     passive_ability_name:
     passive_ability_type:

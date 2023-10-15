@@ -1,8 +1,8 @@
 import moment from 'moment';
 export const cardInitialState = {
-    PATH: '',
-    FPATH: '',
-    RPATH: '',
+    PATH: 'https://res.cloudinary.com/dkcmq8o15/image/upload/v1692250354/testfocus.png',
+    FPATH: 'https://res.cloudinary.com/dkcmq8o15/image/upload/v1692250354/testfocus.png',
+    RPATH: 'https://res.cloudinary.com/dkcmq8o15/image/upload/v1692250354/testfocus.png',
     GIF: 'N/A',
     NAME: '',
     RNAME: 'N/A',
@@ -28,7 +28,7 @@ export const cardInitialState = {
     IMMUNE: [],
     ABSORB: [],
     CLASS: 'N/A',
-    DROP_STYLE: '',
+    DROP_STYLE: 'TALES',
     ID: '',
 }
 
