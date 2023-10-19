@@ -270,12 +270,12 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     
         const { type, name, value, valueAsNumber, id } = e.target;
         
-        if (name === "NAME" && value.includes('\n')) {
-            console.log("BATCH JOB");
-            setBatchJob(true);
-        } else {
-            setBatchJob(false);
-        }
+        // if (name === "NAME" && value.includes('\n')) {
+        //     console.log("BATCH JOB");
+        //     setBatchJob(true);
+        // } else {
+        //     setBatchJob(false);
+        // }
         
         // For input of type number
         if (type === "number") {

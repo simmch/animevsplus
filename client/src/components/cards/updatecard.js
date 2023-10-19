@@ -109,66 +109,105 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
         }
       }, [auth])
 
-      const tierConfig = {
+    const tierConfig = { 
         1: {
             HLT: 1725,
             atkDef: 325,
-            apValues: 500
+            apValues: 500,
+            enhancement_value: 3,
+            enhancer_value: 10,
         },
         2: {
             HLT: 1750,
             atkDef: 350,
-            apValues: 550
+            apValues: 550,
+            enhancement_value: 5,
+            enhancer_value: 15,
         },
         3: {
             HLT: 1800,
             atkDef: 400,
-            apValues: 600
+            apValues: 600,
+            enhancement_value: 7,
+            enhancer_value: 10,
+            enhancer_value: 25,
         },
         4: {
             HLT: 1850,
             atkDef: 425,
-            apValues: 650
+            apValues: 650,
+            enhancement_value: 9,
+            enhancer_value: 30,
         },
         5: {
             HLT: 1900,
             atkDef: 450,
-            apValues: 700
+            apValues: 700,
+            enhancement_value: 11,
+            enhancer_value: 38,
         },
         6: {
             HLT: 1950,
             atkDef: 475,
-            apValues: 750
+            apValues: 750,
+            enhancement_value: 13,
+            enhancer_value: 45,
         },
         7: {
             HLT: 2000,
             atkDef: 500,
-            apValues: 800
+            apValues: 800,
+            enhancement_value: 15,
+            enhancer_value: 50,
         },
         8: {
             HLT: 2050,
             atkDef: 525,
-            apValues: 850
+            apValues: 850,
+            enhancement_value: 17,
+            enhancer_value: 58,
         },
         9: {
             HLT: 2100,
             atkDef: 550,
-            apValues: 900
+            apValues: 900,
+            enhancement_value: 19,
+            enhancer_value: 65,
         },
         10: {
             HLT: 2150,
             atkDef: 575,
-            apValues: 950
+            apValues: 950,
+            enhancement_value: 21,
+            enhancer_value: 70,
         },
     };
     
     function setTierDefaults(type, value) {
         if (type === "TIER" && tierConfig[value]) {
+            let move_numbers = tierConfig[value].apValues;
+            let move1 = Math.round(move_numbers * 0.15);
+            let move2 = Math.round(move_numbers * 0.35);
+            let move3 = Math.round(move_numbers * 0.50);
+
             setData({
                 ...data,
                 TIER: value,
                 HLT: tierConfig[value].HLT
             });
+
+            setPassive({
+                ...passive,
+                POWER: tierConfig[value].enhancement_value,
+            })
+
+            setMoves({
+                ...moves,
+                MOVE1_POWER: move1,
+                MOVE2_POWER: move2,
+                MOVE3_POWER: move3,
+                ENHANCER_POWER: tierConfig[value].enhancer_value,
+            })
             
             setDefaults({
                 atkDef: tierConfig[value].atkDef,
