@@ -451,7 +451,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     const onClickSelectGif = async (e) => {
         e.preventDefault()
         setSelectGifToggle(!selectGifToggle)
-        const res = await axios.get(`/crown/tenor/${data.NAME} ${data.UNIVERSE} Action`)
+        const res = await axios.get(`/crown/tenor/${data.NAME} ${data.UNIVERSE}`)
         console.log(res)
         if(res){
             setGifs({
