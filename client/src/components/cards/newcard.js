@@ -49,8 +49,15 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         resolve_image_url: "",
         list_of_images: []
     })
+    const [gifs, setGifs] = useState({
+        loading: true,
+        gifs_available: false,
+        list_of_gifs: []
+    })
     const [selectImageToggle, setSelectImageToggle] = useState(false);
     const [insertImageToggle, setInsertImageToggle] = useState(false);
+    const [selectGifToggle, setSelectGifToggle] = useState(false);
+    const [insertGifToggle, setInsertGifToggle] = useState(false);
     const [aiToggle, setAiToggle] = useState(false);
     const [aiToggleLoading, setAiToggleLoading] = useState(false);
     const [aiToggleFailure, setAiToggleFailure] = useState(false);
@@ -440,6 +447,21 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         }
     }
 
+
+    const onClickSelectGif = async (e) => {
+        e.preventDefault()
+        setSelectGifToggle(!selectGifToggle)
+        const res = await axios.get(`/crown/tenor/${data.NAME} ${data.UNIVERSE} Action`)
+        console.log(res)
+        if(res){
+            setGifs({
+                ...images,
+                list_of_gifs: res.data,
+                loading: false
+            })
+        }
+    }
+
     
     if(!images.loading) {
         if(images.list_of_images.length > 0){
@@ -488,6 +510,31 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             })
         };
     }
+
+    if(!gifs.loading) {
+        if(gifs.list_of_gifs.length > 0){
+                var gifs_selector = gifs.list_of_gifs.map(gif => {
+                    return {
+                        value: gif, label: `${gif}`
+                    }
+                }
+            )
+        }
+
+        var gifHandler = (e) => {
+            let value = e[0]
+            gifs.list_of_gifs.map(gif => {
+                if (e.value === gif) {
+                    setData({
+                        ...data,
+                        GIF: gif,
+                    })
+                }
+            })
+        };
+    }
+
+
 
 
     const onClickAi = async (e) => {
@@ -1074,23 +1121,74 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 <div className="row" style={{ display: aiToggle ? 'block' : 'none' }}>
                     <div className="col-md-12 grid-margin">
                         <div className="card">
+                            <Button
+                                style={{ display: !insertGifToggle ? 'block' : 'none' }}
+                                variant="danger"
+                                type="button"
+                                onClick={onClickSelectGif}
+                            >
+                                {selectGifToggle ? 'Hide Gif Selector' : 'Show Gif Selector'}
+                            </Button>
+                            <br />
+                            <Button
+                                style={{ display: !selectGifToggle ? 'block' : 'none' }}
+                                variant="danger"
+                                type="button"
+                                onClick={() => setInsertGifToggle(!insertGifToggle)}
+                            >
+                                {insertGifToggle ? 'Hide Insert Gif Url Form' : 'Show Insert Gif Url Form'}
+                            </Button>
+                            <br />
+                            <div className="card-body" style={{ display: selectGifToggle ? 'block' : 'none' }}>
+                                <Form>
+                                    <Form.Row>
+                                    <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                        <Form.Label>Ultimate Gif</Form.Label>
+                                        <Select
+                                            onChange={gifHandler}
+                                            options={
+                                                gifs_selector
+                                            }
+                                            required
+                                            styles={styleSheet}
+                                        />
+                                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    </Form.Group>
+                                    </Form.Row>
+                                </Form>
+                                {data.GIF ? <img src={data.GIF} alt='Base Image'/> : <span>No Ultimate Gif</span>}
+                            </div>
+                            
+                            <div className="card-body" style={{ display: insertGifToggle ? 'block' : 'none' }}>
+                                <Form>
+                                    <Form.Row>
+                                    <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                        <Form.Label>Ultimate Gif</Form.Label>
+                                        <Form.Control
+                                            value={GIF}
+                                            onChange={onChangeHandler}
+                                            name="GIF"
+                                            required
+                                            type="text"
+
+                                        />
+                                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    </Form.Group>
+                                    </Form.Row>
+                                </Form>
+                                {data.GIF ? <img src={data.GIF} alt='Base Image'/> : <span>No Ultimate Gif</span>}
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row" style={{ display: aiToggle ? 'block' : 'none' }}>
+                    <div className="col-md-12 grid-margin">
+                        <div className="card">
                             <div className="card-body">
                                 <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
                                     <Form.Row>
-                                    <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                            <Form.Label>Ultimate Ability GIF</Form.Label>
-                                            <Form.Control
-                                                value={GIF}
-                                                name="GIF"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="text"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
                                         <Form.Label>Card Class - {CLASS}</Form.Label>
                                             <Select
