@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
 import { cardInitialState, enhancements, elements, classes, drop_styles } from '../STATE'
 import { saveCard } from '../../actions/cards'
+import CardAbilities from './card_abilities'
 
 export const NewCard = ({auth, cards, history, saveCard}) => {
     const [universes, setUniverse] = useState({
@@ -54,6 +55,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         gifs_available: false,
         list_of_gifs: []
     })
+    const [additionals, setAdditionals] = useState({
+        loading: true,
+        data: ""
+    })
+    const [additionalAbilityToggle, setAdditionalAbilityToggle] = useState(false);
     const [selectImageToggle, setSelectImageToggle] = useState(false);
     const [insertImageToggle, setInsertImageToggle] = useState(false);
     const [selectGifToggle, setSelectGifToggle] = useState(false);
@@ -266,7 +272,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 atkDef: tierConfig[value].atkDef,
                 apValues: tierConfig[value].apValues,
                 ad_points_left: tierConfig[value].atkDef - (ATK + DEF),
-                ap_points_left: tierConfig[value].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)
+                ap_points_left: tierConfig[value].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER),
             });
 
         }
@@ -541,6 +547,14 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         try {
             setAiToggleLoading(true)
             const res = await axios.get(`/crown/ai/prompt/${data.NAME}/${data.UNIVERSE}`)
+            const additional_abilities = await axios.get(`/crown/ai/prompt/abilities/${data.NAME}/${data.UNIVERSE}`)
+            console.log(additional_abilities)
+            if(additional_abilities){
+                setAdditionals({
+                    ...additionals,
+                    data: additional_abilities.data
+                })
+            }
             if(res){
                 const min = 1000000; // Minimum 7-digit number (inclusive)
                 const max = 9999999; // Maximum 7-digit number (inclusive)
@@ -622,26 +636,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                     ENHANCER_POWER: tierConfig[parseInt(res.data.tier, 10)].enhancement_value,
                 })
 
-
-                setMoveOptions({
-                    ...moveOptions,
-                    POTENTIAL_MOVE1: res.data.potential_ability1_name,
-                    POTENTIAL_MOVE1_ELEMENT: res.data.potential_ability1_element.toUpperCase(),
-                    POTENTIAL_MOVE1_POWER: res.data.potential_ability1_power,
-                    POTENTIAL_MOVE2: res.data.potential_ability2_name,
-                    POTENTIAL_MOVE2_ELEMENT: res.data.potential_ability2_element.toUpperCase(),
-                    POTENTIAL_MOVE2_POWER: res.data.potential_ability2_power,
-                    POTENTIAL_MOVE3: res.data.potential_ability3_name,
-                    POTENTIAL_MOVE3_ELEMENT: res.data.potential_ability3_element.toUpperCase(),
-                    POTENTIAL_MOVE3_POWER: res.data.potential_ability3_power,
-                    POTENTIAL_MOVE4: res.data.potential_ability4_name,
-                    POTENTIAL_MOVE4_ELEMENT: res.data.potential_ability4_element.toUpperCase(),
-                    POTENTIAL_MOVE4_POWER: res.data.potential_ability4_power,
-                    POTENTIAL_MOVE5: res.data.potential_ability5_name,
-                    POTENTIAL_MOVE5_ELEMENT: res.data.potential_ability5_element.toUpperCase(),
-                    POTENTIAL_MOVE5_POWER: res.data.potential_ability5_power,
-                })
-
                 setAiToggle(true)
                 setAiToggleLoading(false)
             } else {
@@ -661,6 +655,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     const batchCardGeneration = async (cardname, universename) => {
         console.log(`BATCH JOB STARTED - ${cardname}`)
         const res = await axios.get(`/crown/ai/prompt/${cardname}/${universename}`)
+        console.log(res)
         if(res){
             const min = 1000000; // Minimum 7-digit number (inclusive)
             const max = 9999999; // Maximum 7-digit number (inclusive)
@@ -1330,8 +1325,22 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
 
                                     <p>Total Available Attack / Defense Point Left = {defaults.atkDef - (ATK + DEF)}</p>
                                     <p>Total Available Ability Points Left = {defaults.apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)}</p>
+                                    <Button
+                                        variant='primary'
+                                        type="button"
+                                        // If additionalAbilityToggle is false, make it true. Else, make it false.
+                                        onClick={() => setAdditionalAbilityToggle(!additionalAbilityToggle)}
+                                    >
+                                    {additionalAbilityToggle ? 'Hide Profile View' : 'Show Character Profile'}
+                                    </Button>
+                                   
+
+                                    <div style={{ display: additionalAbilityToggle ? 'block' : 'none' }}>
+                                        <CardAbilities response={additionals.data} />
+                                    </div>
+                                    <br />
                                     
-                                    <div>
+                                    {/* <div>
                                         <h2>Potential Abilities List</h2>
                                         <ol>
                                             <li>
@@ -1350,7 +1359,8 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                                 {moveOptions.POTENTIAL_MOVE5} - {moveOptions.POTENTIAL_MOVE5_ELEMENT} - {moveOptions.POTENTIAL_MOVE5_POWER}
                                             </li>
                                         </ol>
-                                    </div>
+                                    </div> */}
+
                                     <Form.Row>
                                         <Form.Group as={Col} md="6" controlId="validationCustom02">
                                                 <Form.Label>Normal Attack</Form.Label>

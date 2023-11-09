@@ -15,10 +15,29 @@ router.get("/prompt/:name/:universe", async (req, res) => {
         const prompt = ai_prompts.card_creation_prompt_function(name, universe);
         const completion = await ai.chat.completions.create({
             messages: [{role: 'user', content: prompt,}],
-            model: 'gpt-3.5-turbo-16k',
+            model: 'gpt-4-1106-preview',
         })
         const parsedCard = parseCardString(completion.choices[0].message.content);
         res.json(parsedCard);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// @route   GET crown/prompt/abilities/:name/:universe
+// @desc    Make AI Call
+// @access  Public
+router.get("/prompt/abilities/:name/:universe", async (req, res) => {
+    try {
+        const { name, universe } = req.params;
+        const prompt = ai_prompts.get_card_abilities(name, universe);
+        const completion = await ai.chat.completions.create({
+            messages: [{role: 'user', content: prompt,}],
+            model: 'gpt-4-1106-preview',
+        })
+        const response = completion.choices[0].message.content;
+        res.json(response);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");

@@ -95,25 +95,20 @@ const card_creation_prompt_function = (name, universe) => {
     repels: [] Put this in string array, leave empty if none
     immunity: [] Put this in string array, leave empty if none
     absorbs: [] Put this in string array, leave empty if none
-    potential_ability1_name:
-    potential_ability1_element:
-    potential_ability1_power:
-    potential_ability2_name:
-    potential_ability2_element:
-    potential_ability2_power:
-    potential_ability3_name:
-    potential_ability3_element:
-    potential_ability3_power:
-    potential_ability4_name:
-    potential_ability4_element:
-    potential_ability4_power:
-    potential_ability5_name:
-    potential_ability5_element:
-    potential_ability5_power:
     `;
     return prompt_text;
 }
 
+
+const get_card_abilities = (name, universe) => {
+    prompt_text = `
+    You are a helpful assistance that provides listed information on anime characters, specifically their combat abilities and techniques. Please, name the abilities and techniques of ${name} from the ${universe} manga / anime.
+    `;
+    return prompt_text;
+}
+
+
 module.exports = {
-    card_creation_prompt_function
+    card_creation_prompt_function,
+    get_card_abilities
 }
