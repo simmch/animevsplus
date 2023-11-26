@@ -15,6 +15,26 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
         loading: true
     });
 
+    const [cards, setCard] = useState({
+        card: [],
+        loading: true
+    });
+
+    const [pets, setPet] = useState({
+        pet: [],
+        loading: true
+    });
+
+    const [arms, setArm] = useState({
+        arm: [],
+        loading: true
+    });
+
+    const [titles, setTitle] = useState({
+        title: [],
+        loading: true
+    });
+
     const [universeData, setUniverseData] = useState({
         loading: true
     })
@@ -32,13 +52,18 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
         TIER,
         CROWN_TALES,
         HAS_CROWN_TALES,
+        HAS_DUNGEON,
+        DUNGEONS,
         UTITLE,
         UPET,
         UARM,
         DTITLE,
         DARM,
         DPET,
-        UNIVERSE_BOSS
+        GUILD,
+        UNIVERSE_BOSS,
+        CORRUPTED,
+        CORRUPTION_LEVEL,
     } = data;
 
     useEffect(() => {
@@ -49,23 +74,39 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
                 })
         }
     }, [auth])
-
     const onChangeHandler = (e) => {
-        setShow(false)
-        if (e.target.type === "number"){
-            setData({
-                ...data,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } else {
-            setData({
-                ...data,
-                [e.target.name]: e.target.value
-            })
-        }
+        setShow(false);
+    
+        const { type, name, value } = e.target;
         
-    }
+        // For input of type number
+        if (type === "number") {
+            setData(prevData => ({
+                ...prevData,
+                [name]: parseFloat(value) // Use parseFloat to convert string to number
+            }));
+            return;
+        }
+    
+        // For HAS_CROWN_TALES and HAS_DUNGEON fields
+        if (name === "HAS_CROWN_TALES" || name === "HAS_DUNGEON") {
+            // Convert the string "true" to Boolean true, everything else to false
+            const booleanValue = value === "true";
+            setData(prevData => ({
+                ...prevData,
+                [name]: booleanValue
+            }));
+            return;
+        }
+    
+        // For other inputs
+        setData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
+    console.log(data)
     if(!universes.loading) {
         var universeSelector = universes.universe.map(universe => {
             return {
@@ -73,48 +114,81 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
             }
         })
     
-        var universeHandler = (e) => {
-            let value = e[0]
-            universes.universe.map(universe => {
-                if (e.value === universe.TITLE) {
-                    setData({
-                        ...data,
-                        TITLE: universe.TITLE,
-                        PATH: universe.PATH,
-                        PREREQUISITE: universe.PREREQUISITE,
-                        TIER: universe.TIER,
-                        CROWN_TALES: universe.CROWN_TALES,
-                        HAS_CROWN_TALES: universe.HAS_CROWN_TALES,
-                        UTITLE: universe.UTITLE,
-                        UPET: universe.UPET,
-                        UARM: universe.UARM,
-                        DTITLE: universe.DTITLE,
-                        DARM: universe.DARM,
-                        DPET: universe.DPET,
-                        UNIVERSE_BOSS: universe.UNIVERSE_BOSS
-                    })
-                }
-            })
-        }
+        var universeHandler = (selectedOption) => {
+            // Find the selected universe
+            const selectedUniverse = universes.universe.find(universe => selectedOption.value === universe.TITLE);
+        
+            if (selectedUniverse) {
+                setData({
+                    ...data,
+                    ...selectedUniverse // Spread the properties of the selected universe
+                });
+        
+                // Use the TITLE from the selected universe for Axios calls
+                axios.get(`/crown/arms/universe/${selectedUniverse.TITLE}`)
+                    .then((res) => {
+                        setArm({ arm: res.data, loading: false });
+                    });
+        
+                axios.get(`/crown/cards/universe/${selectedUniverse.TITLE}`)
+                    .then((res) => {
+                        setCard({ card: res.data, loading: false });
+                    });
+            }
+        };
+    }
 
-        var universePrereqSelector = universes.universe.map(universe => {
+
+    if(!cards.loading) {
+        var cardSelector = cards.card.map(card => {
             return {
-                value: universe.TITLE, label: `${universe.TITLE}`
+                value: card.NAME, label: `${card.NAME} - ${card.TIER}`
             }
         })
-    
-        var universePrereqHandler = (e) => {
-            let value = e[0]
-            universes.universe.map(universe => {
-                if (e.value === universe.TITLE) {
-                    setData({
-                        ...data,
-                        PREREQUISITE: universe.TITLE,
-                    })
-                }
-            })
-        }
+
+        var crownTalesHandler = (selectedOptions) => {
+            // selectedOptions is the current state of selected items
+            if (selectedOptions) {
+                // Map the selected options to their values
+                const newEnemies = selectedOptions.map(option => option.value);
+        
+                // Update the data state with the new list of enemies
+                setData({
+                    ...data,
+                    CROWN_TALES: newEnemies,
+                });
+            } else {
+                // If nothing is selected, set ENEMIES to an empty array
+                setData({
+                    ...data,
+                    CROWN_TALES: [],
+                });
+            }
+        };
+
+        var dungeonHandler = (selectedOptions) => {
+            // selectedOptions is the current state of selected items
+            if (selectedOptions) {
+                // Map the selected options to their values
+                const newEnemies = selectedOptions.map(option => option.value);
+        
+                // Update the data state with the new list of enemies
+                setData({
+                    ...data,
+                    DUNGEONS: newEnemies,
+                });
+            } else {
+                // If nothing is selected, set ENEMIES to an empty array
+                setData({
+                    ...data,
+                    DUNGEONS: [],
+                });
+            }
+        };
+
     }
+
+
     
     var submission_response = "Success!";
     var submission_alert_dom = <Alert show={show} variant="success"> {submission_response} </Alert>
@@ -178,25 +252,12 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
-
-                                        <Form.Group as={Col} md="6" controlId="validationCustom02">
-                                            <Form.Label>Prerequisite - {PREREQUISITE}</Form.Label>
-                                            <Select
-                                                onChange={universePrereqHandler}
-                                                options={
-                                                    universePrereqSelector
-                                                }
-                                                styles={styleSheet}
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
                                     </Form.Row>
 
                                     <Form.Row>
 
                                     <Form.Group as={Col} md="12" controlId="validationCustom02">
-                                            <Form.Label>Path</Form.Label>
+                                            <Form.Label>Universe Image Path</Form.Label>
                                             <Form.Control
                                                 value={PATH}
                                                 name="PATH"
@@ -208,22 +269,66 @@ export const UpdateUniverse = ({auth, history, updateUniverse, deleteUniverse}) 
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
-                                            <Form.Label>Tier</Form.Label>
-                                            <Form.Control
-                                                value={TIER}
-                                                name="TIER"
-                                                onChange={onChangeHandler}
-                                                required
-                                                type="number"
-
+                                    </Form.Row>
+                                    <Form.Row>
+                                    <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Tales Lineup</Form.Label>
+                                            <Select
+                                                onChange={crownTalesHandler}
+                                                value={CROWN_TALES.map(enemy => ({ label: enemy, value: enemy }))}
+                                                isMulti
+                                                options={cardSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
-                                        
                                     </Form.Row>
+                                    <Form.Row>
+                                    <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                            <Form.Label>Dungeon Lineup</Form.Label>
+                                            <Select
+                                                onChange={dungeonHandler}
+                                                value={DUNGEONS.map(enemy => ({ label: enemy, value: enemy }))}
+                                                isMulti
+                                                options={cardSelector}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                styles={styleSheet}
+                                            />
+                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Tales Available?</Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                name="HAS_CROWN_TALES"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={onChangeHandler}
+                                            >
+                                                <option value={true}>Yes</option>
+                                                <option value={""}>No</option>
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </Form.Row>
+                                    <Form.Row>
+                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                            <Form.Label>Dungeon Available?</Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                name="HAS_DUNGEON"
+                                                id="inlineFormCustomSelectPref"
+                                                onChange={onChangeHandler}
+                                            >
+                                                <option value={true}>Yes</option>
+                                                <option value={""}>No</option>
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </Form.Row>
+
                                     <Button type="submit">Update Universe</Button>
                                     <br />
                                     <br />

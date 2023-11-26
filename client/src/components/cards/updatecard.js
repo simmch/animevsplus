@@ -217,8 +217,11 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
             })
             
             setDefaults({
+                ...defaults,
                 atkDef: tierConfig[value].atkDef,
-                apValues: tierConfig[value].apValues
+                apValues: tierConfig[value].apValues,
+                ad_points_left: tierConfig[value].atkDef - (ATK + DEF),
+                ap_points_left: tierConfig[value].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER),
             });
         }
     }
@@ -667,96 +670,26 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
     })
     
 
-    var weaknessHandler = (e) => {
-        if(e != null){
-            let value = e
-            const weaknessList = [];
-            for(const ti of value){
-                if(!data.WEAKNESS.includes(ti)){
-                    weaknessList.push(ti.value)
-                }
-            }
-            if(weaknessList){
-                setData({
-                    ...data,
-                    WEAKNESS: weaknessList,
-                })
-            }
-            
+    const genericHandler = (selectedOptions, property) => {
+        if (selectedOptions) {
+            const newList = selectedOptions.map((option) => option.value);
+            setData({
+                ...data,
+                [property]: newList
+            });   
+        } else {
+            setData({
+                ...data,
+                [property]: []
+            });
         }
-    }
-    var resistancesHandler = (e) => {
-        if(e != null){
-            let value = e
-            const resistancesList = [];
-            for(const ti of value){
-                if(!data.RESISTANT.includes(ti)){
-                    resistancesList.push(ti.value)
-                }
-            }
-            if(resistancesList){
-                setData({
-                    ...data,
-                    RESISTANT: resistancesList,
-                })
-            }
-            
-        }
-    }
-    var repelsHandler = (e) => {
-        if(e != null){
-            let value = e
-            const repelsList = [];
-            for(const ti of value){
-                if(!data.REPEL.includes(ti)){
-                    repelsList.push(ti.value)
-                }
-            }
-            if(repelsList){
-                setData({
-                    ...data,
-                    REPEL: repelsList,
-                })
-            }
-            
-        }
-    }
-    var immunityHandler = (e) => {
-        if(e != null){
-            let value = e
-            const immunityList = [];
-            for(const ti of value){
-                if(!data.IMMUNE.includes(ti)){
-                    immunityList.push(ti.value)
-                }
-            }
-            if(immunityList){
-                setData({
-                    ...data,
-                    IMMUNE: immunityList,
-                })
-            }
-            
-        }
-    }
-    var absorbHandler = (e) => {
-        if(e != null){
-            let value = e
-            const absorbList = [];
-            for(const ti of value){
-                if(!data.ABSORB.includes(ti)){
-                    absorbList.push(ti.value)
-                }
-            }
-            if(absorbList){
-                setData({
-                    ...data,
-                    ABSORB: absorbList,
-                })
-            }
-            
-        }
-    }
+    };
+    
+    const weaknessHandler = (e) => genericHandler(e, 'WEAKNESS');
+    const resistancesHandler = (e) => genericHandler(e, 'RESISTANT');
+    const repelsHandler = (e) => genericHandler(e, 'REPEL');
+    const immunityHandler = (e) => genericHandler(e, 'IMMUNE');
+    const absorbHandler = (e) => genericHandler(e, 'ABSORB');
 
 
     
@@ -1394,6 +1327,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Label>Weaknesses - {WEAKNESS.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={weaknessHandler}
+                                                value={WEAKNESS.map(weakness => ({value: weakness, label: weakness}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1409,6 +1343,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Label>Resistances - {RESISTANT.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={resistancesHandler}
+                                                value={RESISTANT.map(resistance => ({value: resistance, label: resistance}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1424,6 +1359,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Label>Repels - {REPEL.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={repelsHandler}
+                                                value={REPEL.map(repels => ({value: repels, label: repels}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1439,6 +1375,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Label>Immunity - {IMMUNE.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={immunityHandler}
+                                                value={IMMUNE.map(immunity => ({value: immunity, label: immunity}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1454,6 +1391,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Label>Absorbs - {ABSORB.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={absorbHandler}
+                                                value={ABSORB.map(absorb => ({value: absorb, label: absorb}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"

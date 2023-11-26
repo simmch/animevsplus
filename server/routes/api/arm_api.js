@@ -62,7 +62,9 @@ router.get("/universe/:universe", async (req, res) => {
 
     try {
         const arms = await Arm.find({ 'UNIVERSE' : req.params.universe });
-        res.json(arms);
+        if(arms) {
+            return res.json(arms);
+        }
         if (!arms) {
             return res
                 .status(400)

@@ -238,46 +238,46 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
     if(!cards.loading) {
         var cardSelector = cards.card.map(card => {
             return {
-                value: card.NAME, label: `${card.NAME}`
+                value: card.NAME, label: `${card.NAME} - ${card.DROP_STYLE}`
             }
         })
 
-        var enemyHandler = (e) => {
-            if(e != null){
-                let value = e
-                const enemyList = [];
-                for(const e of value){
-                    if(!data.ENEMIES.includes(e)){
-                        enemyList.push(e.value)
-                    }
-                }
-                if(enemyList){
-                    setData({
-                        ...data,
-                        ENEMIES: enemyList,
-                    })
-                }
-                
+        var enemyHandler = (selectedOptions) => {
+            // selectedOptions is the current state of selected items
+            if (selectedOptions) {
+                // Map the selected options to their values
+                const newEnemies = selectedOptions.map(option => option.value);
+        
+                // Update the data state with the new list of enemies
+                setData({
+                    ...data,
+                    ENEMIES: newEnemies,
+                });
+            } else {
+                // If nothing is selected, set ENEMIES to an empty array
+                setData({
+                    ...data,
+                    ENEMIES: [],
+                });
             }
-        }
+        };
 
-        var destinyCardHandler = (e) => {
-            if(e != null){
-                let value = e
-                const destinyCardList = [];
-                for(const e of value){
-                    if(!data.DESTINY_CARDS.includes(e)){
-                        destinyCardList.push(e.value)
-                    }
-                }
-                if(destinyCardList){
-                    setData({
-                        ...data,
-                        DESTINY_CARDS: destinyCardList,
-                        IS_DESTINY: true
-                    })
-                }
+        var destinyCardHandler = (selectedOptions) => {
+            if(selectedOptions){
+                const newDestinyCardList = selectedOptions.map(option => option.value);
+
+                setData({
+                    ...data,
+                    DESTINY_CARDS: newDestinyCardList,
+                    IS_DESTINY: true
+                })
                 
+            } else {
+                setData({
+                    ...data,
+                    DESTINY_CARDS: [],
+                    IS_DESTINY: false
+                })
             }
         }
 
@@ -302,16 +302,23 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
         }
     }
 
-    var tacticsHandler = (e) => {
-        let value = e[0]
-        tactics.map(tactic => {
-            if (e.value === tactic) {
-                setData({
+    var tacticsHandler = (selectedOptions) => {
+        // selectedOptions is the current state of selected items
+        if (selectedOptions) {
+            // Map the selected options to their values
+            const newTactics = selectedOptions.map(option => option.value);
+
+            setData({
                     ...data,
-                    TACTICS: tactic,
+                    TACTICS: newTactics,
                 })
-            }
-        })
+        } else {
+            // If nothing is selected, set ENEMIES to an empty array
+            setData({
+                ...data,
+                TACTICS: [],
+            });
+        }
     };
 
     var tacticsSelector = tactics.map(tactic => {
@@ -436,6 +443,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             <Form.Label>Scenario Enemies</Form.Label>
                                             <Select
                                                 onChange={enemyHandler}
+                                                value={ENEMIES.map(enemy => ({ label: enemy, value: enemy }))}
                                                 isMulti
                                                 options={cardSelector}
                                                 className="basic-multi-select"
@@ -578,13 +586,14 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
                                         </Form.Group>
-                                    <Form.Row>
+                                    </Form.Row>
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
                                             <Form.Label>Destiny Cards</Form.Label>
                                             <Select
                                                 onChange={destinyCardHandler}
+                                                value={DESTINY_CARDS.map(card => ({ label: card, value: card }))}
                                                 isMulti
                                                 options={cardSelector}
                                                 className="basic-multi-select"
@@ -600,6 +609,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             <Form.Label>Raid Tactics</Form.Label>
                                             <Select
                                                 onChange={tacticsHandler}
+                                                value={TACTICS.map(tactic => ({ label: tactic, value: tactic }))}
                                                 isMulti
                                                 options={tacticsSelector}
                                                 className="basic-multi-select"
@@ -610,7 +620,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                         </Form.Group>
                                     </Form.Row>
 
-                                    </Form.Row>
+                                    <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
                                                 <Form.Label>Must First Complete These Scenarios</Form.Label>
                                                 <Select

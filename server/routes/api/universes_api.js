@@ -123,16 +123,31 @@ router.post("/update", async (req, res) => {
     }
 })
 
-// @route   DELETE crown/universe/delete
-// @desc    Delete a Universe
-// @access  Public
-router.delete("/delete", async (req, res) => {
-    try {
-        await Universe.findOneAndRemove({TITLE: req.body.TITLE})
-        res.status(200).send("Universe successfully removed. ")
-    } catch(err) {
-        res.status(500).send("Server Error")
-    }
-})
+    // Create new router for UPDATE all universes to AVAIALBLE: false
+    // @route   POST crown/universe/update
+    // @desc    Update Universe info
+    // @access  Public
+    router.post("/update/available", async (req, res) => {
+    
+        try {
+            await Universe.updateMany({}, { HAS_CROWN_TALES: false, HAS_DUNGEON: false, AVAILABLE: false })
+            res.status(200).send("Universe successfully updated!")
+        } catch(err) {
+            console.error(err.message);
+            res.status(500).send("Server Error.")
+        }
+    })
+
+    // @route   DELETE crown/universe/delete
+    // @desc    Delete a Universe
+    // @access  Public
+    router.delete("/delete", async (req, res) => {
+        try {
+            await Universe.findOneAndRemove({TITLE: req.body.TITLE})
+            res.status(200).send("Universe successfully removed. ")
+        } catch(err) {
+            res.status(500).send("Server Error")
+        }
+    })
 
 module.exports = router

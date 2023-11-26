@@ -88,7 +88,6 @@ export const NewUniverse = ({auth, history, saveUniverse}) => {
                     setPet({pet: res.data, loading: false})
                 })
 
-
         }
     }, [auth])
 
@@ -339,7 +338,7 @@ export const NewUniverse = ({auth, history, saveUniverse}) => {
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom02">
-                                            <Form.Label>Path</Form.Label>
+                                            <Form.Label>Universe Image Path</Form.Label>
                                             <Form.Control
                                                 value={PATH}
                                                 name="PATH"
@@ -353,7 +352,7 @@ export const NewUniverse = ({auth, history, saveUniverse}) => {
                                         </Form.Group>
                                         
                                     </Form.Row>
-
+{/* 
                                     <Form.Row>
                                         <Form.Group as={Col} md="6" controlId="validationCustom02">
                                             <Form.Label>Tales Title</Form.Label>
@@ -451,7 +450,7 @@ export const NewUniverse = ({auth, history, saveUniverse}) => {
                                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             </Form.Group>
                                     </Form.Row>
-
+ */}
                                     <Button type="submit">Create Universe</Button>
                                     <br />
                                     <br />

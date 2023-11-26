@@ -184,7 +184,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
     if(!cards.loading) {
         var cardSelector = cards.card.map(card => {
             return {
-                value: card.NAME, label: `${card.NAME}`
+                value: card.NAME, label: `${card.NAME} - ${card.DROP_STYLE}`
             }
         })
 

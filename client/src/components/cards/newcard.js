@@ -840,22 +840,18 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     const element2EnhancementHandler = (e) => enhanceElementHandler(e, 'MOVE2_ELEMENT');
     const element3EnhancementHandler = (e) => enhanceElementHandler(e, 'MOVE3_ELEMENT');
     
-    const genericHandler = (e, property) => {
-        if (e !== null) {
-            const list = [];
-    
-            for (const ti of e) {
-                if (!data[property].includes(ti)) {
-                    list.push(ti.value);
-                }
-            }
-    
-            if (list.length > 0) {
-                setData({
-                    ...data,
-                    [property]: list
-                });
-            }
+    const genericHandler = (selectedOptions, property) => {
+        if (selectedOptions) {
+            const newList = selectedOptions.map((option) => option.value);
+            setData({
+                ...data,
+                [property]: newList
+            });   
+        } else {
+            setData({
+                ...data,
+                [property]: []
+            });
         }
     };
     
@@ -1564,6 +1560,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Label>Weaknesses - {data.WEAKNESS.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={weaknessHandler}
+                                                value={WEAKNESS.map(weakness => ({value: weakness, label: weakness}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1579,6 +1576,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Label>Resistances - {data.RESISTANT.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={resistancesHandler}
+                                                value={RESISTANT.map(resistance => ({value: resistance, label: resistance}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1594,6 +1592,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Label>Repels - {data.REPEL.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={repelsHandler}
+                                                value={REPEL.map(repel => ({value: repel, label: repel}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1609,6 +1608,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Label>Immunity - {data.IMMUNE.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={immunityHandler}
+                                                value={IMMUNE.map(immunity => ({value: immunity, label: immunity}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
@@ -1624,6 +1624,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Label>Absorbs - {data.ABSORB.join(", ")}</Form.Label>
                                             <Select
                                                 onChange={absorbHandler}
+                                                value={ABSORB.map(absorb => ({value: absorb, label: absorb}))}
                                                 isMulti
                                                 options={elementSelector}
                                                 className="basic-multi-select"
