@@ -12,7 +12,7 @@ const Pet_Widget = ({data}) => {
         if(!loading){
             let disname = user.data.DISNAME;
             let updated_disname = disname.replace("#", "%23");
-            axios.get(`/crown/vault/${updated_disname}`)
+            axios.get(`/crown/pets/${user.data.PET}`)
                 .then((res) => {
                     setPet({pet: res, loading: false})
                 })
@@ -20,7 +20,7 @@ const Pet_Widget = ({data}) => {
     }, [])
 
     if(!pet.loading){
-        var petList = pet.pet.data.PETS;
+        var petList = user.data.PETS;
         var selectedPet;
         for (let pet in petList) {
             if(petList[pet]["NAME"] == user.data.PET){

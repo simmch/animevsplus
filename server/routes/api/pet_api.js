@@ -29,7 +29,9 @@ router.get("/:pet", async (req, res) => {
 
     try {
         const pets = await Pet.findOne({ 'PET' : req.params.pet });
-        res.json(pets);
+        if(pets){
+            res.json(pets);
+        }
         if (!pets) {
             return res
                 .status(400)

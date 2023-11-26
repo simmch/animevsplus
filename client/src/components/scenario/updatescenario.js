@@ -168,79 +168,26 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
     }
 
         
-    if(!arms.loading) {
+    if(!arms.loading && !cards.loading) {
         var armSelector = arms.arm.map(arm => {
             return {
                 value: arm.ARM, label: `${arm.ARM}`
             }
         })
-    
-        var easyArmHandler = (e) => {
-            if(e != null){
-                let value = e
-                const easyArmList = [];
-                for(const a of value){
-                    if(!data.EASY_DROPS.includes(a)){
-                        easyArmList.push(a.value)
-                    }
-                }
-                if(easyArmList){
-                    setData({
-                        ...data,
-                        EASY_DROPS: easyArmList,
-                    })
-                }
-                
-            }
-        }
 
-        var normalArmHandler = (e) => {
-            if(e != null){
-                let value = e
-                const normalArmList = [];
-                for(const a of value){
-                    if(!data.NORMAL_DROPS.includes(a)){
-                        normalArmList.push(a.value)
-                    }
-                }
-                if(normalArmList){
-                    setData({
-                        ...data,
-                        NORMAL_DROPS: normalArmList,
-                    })
-                }
-                
-            }
-        }
-
-        var hardArmHandler = (e) => {
-            if(e != null){
-                let value = e
-                const hardArmList = [];
-                for(const a of value){
-                    if(!data.HARD_DROPS.includes(a)){
-                        hardArmList.push(a.value)
-                    }
-                }
-                if(hardArmList){
-                    setData({
-                        ...data,
-                        HARD_DROPS: hardArmList,
-                    })
-                }
-                
-            }
-        }
-
-
-    }
-
-    if(!cards.loading) {
         var cardSelector = cards.card.map(card => {
             return {
                 value: card.NAME, label: `${card.NAME} - ${card.DROP_STYLE}`
             }
         })
+
+        var reward_selector = arms.arm.map(arm => ({
+            value: arm.ARM, 
+            label: `${arm.ARM}`
+        })).concat(cards.card.map(card => ({
+            value: card.NAME, 
+            label: `${card.NAME} - ${card.DROP_STYLE}`
+        })));
 
         var enemyHandler = (selectedOptions) => {
             // selectedOptions is the current state of selected items
@@ -301,6 +248,25 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
             }
         }
     }
+    const genericHandler = (selectedOptions, property) => {
+        if (selectedOptions) {
+            const newList = selectedOptions.map((option) => option.value);
+            setData({
+                ...data,
+                [property]: newList
+            });   
+        } else {
+            setData({
+                ...data,
+                [property]: []
+            });
+        }
+    };
+
+    const easyArmHandler = (e) => genericHandler(e, 'EASY_DROPS');
+    const normalArmHandler = (e) => genericHandler(e, 'NORMAL_DROPS');
+    const hardArmHandler = (e) => genericHandler(e, 'HARD_DROPS');
+
 
     var tacticsHandler = (selectedOptions) => {
         // selectedOptions is the current state of selected items
@@ -456,11 +422,12 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Easy Mode Arm Rewards</Form.Label>
+                                            <Form.Label>Easy Mode Rewards</Form.Label>
                                             <Select
                                                 onChange={easyArmHandler}
+                                                value={EASY_DROPS.map(arm => ({ label: arm, value: arm }))}
                                                 isMulti
-                                                options={armSelector}
+                                                options={reward_selector}
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 styles={styleSheet}
@@ -472,11 +439,12 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Normal Mode Arm Rewards</Form.Label>
+                                            <Form.Label>Normal Mode Rewards</Form.Label>
                                             <Select
                                                 onChange={normalArmHandler}
+                                                value={NORMAL_DROPS.map(arm => ({ label: arm, value: arm }))}
                                                 isMulti
-                                                options={armSelector}
+                                                options={reward_selector}
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 styles={styleSheet}
@@ -488,11 +456,12 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Hard Mode Arm Rewards</Form.Label>
+                                            <Form.Label>Hard Mode Rewards</Form.Label>
                                             <Select
                                                 onChange={hardArmHandler}
+                                                value={HARD_DROPS.map(arm => ({ label: arm, value: arm }))}
                                                 isMulti
-                                                options={armSelector}
+                                                options={reward_selector}
                                                 className="basic-multi-select"
                                                 classNamePrefix="select"
                                                 styles={styleSheet}
@@ -503,7 +472,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                     </Form.Row>
 
 
-                                    <Form.Row>
+                                    {/* <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
                                             <Form.Label>Easy Mode Card Rewards</Form.Label>
                                             <Select
@@ -549,7 +518,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
  
-                                    </Form.Row>
+                                    </Form.Row> */}
                                     <Form.Row>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
                                             <Form.Label> Available </Form.Label>
