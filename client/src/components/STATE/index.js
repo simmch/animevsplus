@@ -308,7 +308,7 @@ export const elements = [
     "DARK",
     "POISON",
     "RANGED",
-    "ENERGY",
+    "SPIRIT",
     "BLEED",
     "TIME",
     "GRAVITY",
