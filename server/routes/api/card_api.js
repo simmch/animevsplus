@@ -54,6 +54,26 @@ router.get("/:name", auth, async (req, res) => {
     }
 })
 
+// Get all cards from a specific universe that have DESTINY drop_style
+// @route   GET crown/cards/destiny/$name
+// @desc    Get destiny cards by name
+// @access  Public
+router.get("/destiny/:universe", async (req, res) => {
+    try {
+        const cards = await Card.find({ 'UNIVERSE': req.params.universe, 'DROP_STYLE': 'DESTINY' });
+        if (!cards.length) {
+            res.status(400).send("No cards found.");
+        } else {
+            const cardDetails = cards.map(card => ({ name: card.NAME, tier: card.TIER }));
+            res.json(cardDetails);
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.");
+    }
+});
+
+
 // @route   GET crown/cards/$universe
 // @desc    Get cards by universe
 // @access  Public
