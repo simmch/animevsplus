@@ -70,24 +70,11 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     const [data, setData] = useState(cardInitialState);
     const [validated, setValidated] = useState(false);
     const [show, setShow] = useState(false);
-    const [passive, setPassive] = useState({
-        ABILITY: "",
-        POWER: 20,
-        PASSIVE_TYPE: ""
-    });
+
     const [combatStyle, setCombatStyle] = useState({
         COMBAT_STYLE: ""
     });
     const [batchJob, setBatchJob] = useState(false);
-
-    // Build Passive
-    var pass_ability = passive.ABILITY.toString()
-    var pass_power = passive.POWER
-    var pass_type = passive.PASSIVE_TYPE
-    var pass_key = pass_ability
-    var passive_Object = {}
-    passive_Object[pass_key] = pass_power
-    passive_Object["TYPE"] = pass_type
 
     const [moves, setMoves] = useState({
         MOVE1_ABILITY: "",
@@ -148,7 +135,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             })
         }
 
-      }, [data, passive, moves, auth])
+      }, [data, moves, auth])
 
 
     const tierConfig = { 
@@ -254,11 +241,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 DEF: defense,
             });
 
-            setPassive({
-                ...passive,
-                POWER: tierConfig[value].enhancement_value,
-            })
-
             setMoves({
                 ...moves,
                 MOVE1_POWER: move1,
@@ -324,21 +306,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             [name]: value
         }));
     };
-
-
-    const passiveHandler = (e) => {
-        if (e.target.type === "number"){
-            setPassive({
-                ...passive,
-                [e.target.name]: e.target.valueAsNumber
-            })
-        } else {
-            setPassive({
-                ...passive,
-                [e.target.name]: e.target.value
-            })
-        }
-    }
 
     const moveHandler = (e) => {
         if (e.target.type === "number"){
@@ -612,14 +579,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         
                 }
 
-                setPassive({
-                    ...passive,
-                    ABILITY: res.data.passive_ability_name,
-                    PASSIVE_TYPE: res.data.passive_ability_type,
-                    POWER: tierConfig[parseInt(res.data.tier, 10)].enhancement_value,
-                })
-
-
                 setMoves({
                     ...moves,
                     MOVE1_ABILITY: res.data.normal_attack_name,
@@ -704,14 +663,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 ID: randomCode.toString()
             })
 
-            setPassive({
-                ...passive,
-                ABILITY: res.data.passive_ability_name,
-                PASSIVE_TYPE: res.data.passive_ability_type,
-                POWER: tierConfig[parseInt(res.data.tier, 10)].enhancement_value,
-            })
-
-
             setMoves({
                 ...moves,
                 MOVE1_ABILITY: res.data.normal_attack_name,
@@ -735,7 +686,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             })
 
             var card_update_data = data;
-            card_update_data.PASS = [passive_Object]
             card_update_data.MOVESET = [move1Object, move2Object, move3Object, enhancerObject]
 
             // console.log(card_update_data)
@@ -803,19 +753,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         }
     });
 
-    var passiveEnhancementHandler = (e) => {
-        let value = e[0]
-        enhancements.map(enhancement => {
-            if (e.value === enhancement) {
-                setPassive({
-                    ...passive,
-                    PASSIVE_TYPE: enhancement,
-                })
-            }
-        })
-
-    };
-
     var moveEnhancementHandler = (e) => {
         let value = e[0]
         enhancements.map(enhancement => {
@@ -881,7 +818,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             })
 
             var card_update_data = data;
-            card_update_data.PASS = [passive_Object]
             card_update_data.MOVESET = [move1Object, move2Object, move3Object, enhancerObject]
 
             const res = await saveCard(data)
@@ -1265,46 +1201,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                     </Form.Row>
 
                                     <Form.Row>
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                            <Form.Label>Passive Ability</Form.Label>
-                                            <Form.Control
-                                                value={passive.ABILITY}
-                                                name="ABILITY"
-                                                onChange={passiveHandler}
-                                                required
-                                                type="text"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                            <Form.Label>Passive Power</Form.Label>
-                                            <Form.Control
-                                                value={passive.POWER}
-                                                name="POWER"
-                                                onChange={passiveHandler}
-                                                required
-                                                type="number"
-
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Passive Type - {passive.PASSIVE_TYPE}</Form.Label>
-                                            <Select
-                                                onChange={passiveEnhancementHandler}
-                                                options={
-                                                    enhancementSelector
-                                                }
-                                                required
-                                                styles={styleSheet}
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                        </Form.Group>
-
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
                                             <Form.Label>Drop Style</Form.Label>
                                             <Select

@@ -40,7 +40,7 @@ router.get("/names/:universe", async (req, res) => {
 // @route   GET crown/cards/$name
 // @desc    Get cards by name
 // @access  Public
-router.get("/:name", auth, async (req, res) => {
+router.get("/:name", async (req, res) => {
     try {
         const cards = await Card.findOne({ 'NAME': req.params.name });
         if (!cards) {
