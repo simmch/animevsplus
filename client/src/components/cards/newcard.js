@@ -606,7 +606,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 , 5000)
             }
         } catch (err) {
-            setAiToggleLoading(true)
+            setAiToggleLoading(false)
             console.error(err)
         }
     }
