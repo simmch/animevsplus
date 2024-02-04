@@ -11,12 +11,14 @@ const ai = new openai.OpenAI({apiKey: process.env.OPENAI_API_KEY})
 // @access  Private
 router.get("/prompt/:name/:universe", async (req, res) => {
     try {
+        console.log("GET /prompt/:name/:universe")
         const { name, universe } = req.params;
         const prompt = ai_prompts.card_creation_prompt_function(name, universe);
         const completion = await ai.chat.completions.create({
             messages: [{role: 'user', content: prompt,}],
             model: 'gpt-4-1106-preview',
         })
+        console.log(completion)
         const parsedCard = parseCardString(completion.choices[0].message.content);
         res.json(parsedCard);
     } catch (err) {
