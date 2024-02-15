@@ -236,6 +236,7 @@ export const NewTitle = ({ auth, history, saveTitle }) => {
 
                         <div>
                         <h2>Ability Titles and Explanations</h2>
+                        <h6>If you want a title to be acquired as a starter make the Unlock Method Tales Runs and the Unlock Value 0</h6>
                         <ul>
                             {Object.entries(title_explanations).map(([title, explanation]) => (
                             <li key={title}>

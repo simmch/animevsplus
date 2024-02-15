@@ -194,12 +194,9 @@ export const unlock_methods = [
     'HEALED IN DUNGEONS',
     'DAMAGE TAKEN IN DUNGEONS',
     'DAMAGE DEALT IN DUNGEONS',
-    'BOSSES COMPLETED',
-    'BOSSES RUN',
     'HEALED IN BOSSES',
     'DAMAGE TAKEN IN BOSSES',
     'DAMAGE DEALT IN BOSSES',
-    'ELEMENTAL DAMAGE DEALT',
 ]
 
 export const title_abilities = [
