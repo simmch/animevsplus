@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert, Modal } from 'react-bootstrap';
-import { cardInitialState, enhancements, elements, classes, drop_styles } from '../STATE';
+import { cardInitialState, enhancements, elements, classes, drop_styles, speedTypes } from '../STATE';
 import { updateCard, deleteCard } from '../../actions/cards';
 import _ from 'lodash';
 
@@ -481,6 +481,47 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
             }
         })
     }
+
+
+    var speedTypeSelector = speedTypes.map(speedType => {
+        return {
+            value: speedType, label: `${speedType}`
+        }
+    });
+
+    var speedTypeHandler = (e) => {
+        let value = e[0]
+        speedTypes.map(speedType => {
+            if (e.value === speedType) {
+                console.log(speedType)
+                if(speedType === "SLOW") {
+                    setData({
+                        ...data,
+                        SPD: 25,
+                    })
+                }
+                if(speedType === "AVERAGE") {
+                    setData({
+                        ...data,
+                        SPD: 50,
+                    })
+                }
+                if(speedType === "FAST") {
+                    setData({
+                        ...data,
+                        SPD: 75,
+                    }
+                )
+                }
+                if(speedType === "GODLY") {
+                    setData({
+                        ...data,
+                        SPD: 100,
+                        })
+                }
+            }
+        })
+    };
 
 
     if(!cardData.loading) {
@@ -980,18 +1021,15 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             
                                         </Form.Group>
 
-                                        <Form.Group as={Col} md="1" controlId="validationCustom11">
-                                            <Form.Label>Speed</Form.Label>
-                                            <Form.Control
-                                                value={SPD}
-                                                name="SPD"
-                                                onChange={onChangeHandler}
+                                        <Form.Group as={Col} md="3" controlId="validationCustom02">
+                                            <Form.Label>Speed Type</Form.Label>
+                                            <Select
+                                                onChange={speedTypeHandler}
+                                                options={speedTypeSelector}
                                                 required
-                                                type="number"
-
+                                                styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="2" controlId="validationCustom12">

@@ -32,6 +32,13 @@ export const cardInitialState = {
     ID: '',
 }
 
+export const speedTypes = [
+    'SLOW',
+    'AVERAGE',
+    'FAST',
+    'GODLY'
+]
+
 
 export const armInitialState = {
     ARM: '',

@@ -6,7 +6,7 @@ import Spinner from '../isLoading/spinner';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Select from 'react-select';
 import { Form, Col, Button, Alert } from 'react-bootstrap';
-import { cardInitialState, enhancements, elements, classes, drop_styles } from '../STATE'
+import { cardInitialState, enhancements, elements, classes, drop_styles, speedTypes } from '../STATE'
 import { saveCard } from '../../actions/cards'
 import CardAbilities from './card_abilities'
 
@@ -509,8 +509,6 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
     }
 
 
-
-
     const onClickAi = async (e) => {
         try {
             setAiToggleLoading(true)
@@ -742,6 +740,45 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             value: element, label: `${element}`
         }
     });
+
+    var speedTypeSelector = speedTypes.map(speedType => {
+        return {
+            value: speedType, label: `${speedType}`
+        }
+    });
+
+    var speedTypeHandler = (e) => {
+        let value = e[0]
+        speedTypes.map(speedType => {
+            if (e.value === speedType) {
+                if(speedType === "SLOW") {
+                    setData({
+                        ...data,
+                        SPD: 25,
+                    })
+                }
+                if(speedType === "AVERAGE") {
+                    setData({
+                        ...data,
+                        SPD: 50,
+                    })
+                }
+                if(speedType === "FAST") {
+                    setData({
+                        ...data,
+                        SPD: 75,
+                    }
+                )
+                }
+                if(speedType === "GODLY") {
+                    setData({
+                        ...data,
+                        SPD: 100,
+                        })
+                }
+            }
+        })
+    };
 
     var classSelector = classes.map(classType => {
         return {
@@ -1188,17 +1225,14 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Group>
 
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                            <Form.Label>Speed</Form.Label>
-                                            <Form.Control
-                                                value={SPD}
-                                                name="SPD"
-                                                onChange={onChangeHandler}
+                                            <Form.Label>Speed Type</Form.Label>
+                                            <Select
+                                                onChange={speedTypeHandler}
+                                                options={speedTypeSelector}
                                                 required
-                                                type="number"
-
+                                                styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
                                         </Form.Group>
                                     </Form.Row>
 
