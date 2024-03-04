@@ -23,7 +23,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         apValues: 0,
         atkDef: 0, 
         ad_points_left: 0,
-        ap_points_left: 0
+        ap_points_left: 0,
     })
     const [moveOptions, setMoveOptions] = useState({
         POTENTIAL_MOVE1: "",
@@ -221,6 +221,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
             let move1 = Math.round(move_numbers * 0.15);
             let move2 = Math.round(move_numbers * 0.35);
             let move3 = Math.round(move_numbers * 0.50);
+            let enhancer_value = tierConfig[value].enhancer_value;
             
             if (combatStyle.COMBAT_STYLE === "OFFENSIVE") {
                 attack = Math.round(atk_stat * 0.70);
@@ -246,7 +247,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                 MOVE1_POWER: move1,
                 MOVE2_POWER: move2,
                 MOVE3_POWER: move3,
-                ENHANCER_POWER: tierConfig[value].enhancer_value,
+                ENHANCER_POWER: enhancer_value,
             })
             
             setDefaults({
@@ -574,7 +575,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                         atkDef: tierConfig[parseInt(res.data.tier, 10)].atkDef,
                         apValues: tierConfig[parseInt(res.data.tier, 10)].apValues,
                         ad_points_left: tierConfig[parseInt(res.data.tier, 10)].atkDef - (ATK + DEF),
-                        ap_points_left: tierConfig[parseInt(res.data.tier, 10)].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)
+                        ap_points_left: tierConfig[parseInt(res.data.tier, 10)].apValues - (MOVE1_POWER + MOVE2_POWER + MOVE3_POWER),
                     });
         
                 }
@@ -1428,7 +1429,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                         </Form.Control>
                                         
                                         </Form.Group>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                        {/* <Form.Group as={Col} md="2" controlId="validationCustom02">
                                         <Form.Label> Is Skin? </Form.Label>
                                         <Form.Control
                                             as="select"
@@ -1449,7 +1450,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                                 styles={styleSheet}
                                             />
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                        </Form.Group>
+                                        </Form.Group> */}
                                     </Form.Row>
                                     
                                     <Form.Row>

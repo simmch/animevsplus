@@ -103,7 +103,12 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                     setCardData({data: res.data, loading: false})
                 })
         }
-      }, [auth])
+
+        if(data.TIER) {
+            setTierDefaults("TIER", data.TIER);
+          }
+        
+      }, [auth, data.TIER])
 
     const tierConfig = { 
         1: {
@@ -281,7 +286,6 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
         e.preventDefault()
         setSelectImageToggle(!selectImageToggle)
         const res = await axios.get(`/crown/cloudinary/${data.NAME}`)
-        console.log(res.data)
         if(res){
             setImages({
                 ...images,
@@ -296,7 +300,6 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
         e.preventDefault()
         setSelectGifToggle(!selectGifToggle)
         const res = await axios.get(`/crown/tenor/${data.NAME} ${data.UNIVERSE}`)
-        console.log(res)
         if(res){
             setGifs({
                 ...images,
@@ -354,6 +357,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
             })
         };
     }
+
 
     if(!gifs.loading) {
         if(gifs.list_of_gifs.length > 0){
@@ -655,7 +659,6 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
             var card_update_data = data;
             card_update_data.MOVESET = [move1Object, move2Object, move3Object, enhancerObject]
             
-            console.log(card_update_data)
             const res = await updateCard(card_update_data)
             setData(cardInitialState)
         }
@@ -909,7 +912,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                 <Form noValidate validated={validated} onSubmit={onSubmitHandler}>
                                     <Form.Row>
                                         <Form.Group as={Col} md="3" controlId="validationCustom02">
-                                        <Form.Label>Card Class</Form.Label>
+                                        <Form.Label>Card Class - {CLASS}</Form.Label>
                                             <Select
                                                 onChange={classHandler}
                                                 options={
@@ -1019,8 +1022,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                     </Form.Row>
                                     <p>Total Available Attack / Defense Point Left = {defaults.atkDef - (ATK + DEF)}</p>
                                     <p>Total Available Ability Point Left = {defaults.apValues -(MOVE1_POWER + MOVE2_POWER + MOVE3_POWER)}</p>
-                                    <Form.Row>
-                                        
+                                    <Form.Row>    
                                         <Form.Group as={Col} md="6" controlId="validationCustom18">
                                                 <Form.Label>Normal Attack</Form.Label>
                                                 <Form.Control
@@ -1181,7 +1183,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-                                        <Form.Group as={Col} md="2" controlId="validationCustom27">
+                                        <Form.Group as={Col} md="12" controlId="validationCustom27">
                                             <Form.Label>Available</Form.Label>
                                             
                                             <Form.Control
@@ -1192,10 +1194,9 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                                 <option value={true} name="true">Yes</option>
                                                 <option value={""} name="false">No</option>
                                             </Form.Control>
-                                            
                                             </Form.Group>
 
-                                            <Form.Group as={Col} md="2" controlId="validationCustom02">
+                                            {/* <Form.Group as={Col} md="2" controlId="validationCustom02">
                                             <Form.Label>Is Skin?</Form.Label>
                                             <Form.Control
                                                 as="select"
@@ -1216,7 +1217,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                                     styles={styleSheet}
                                                 />
                                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            </Form.Group>
+                                            </Form.Group> */}
                                     </Form.Row>
 
                                     <Form.Row>

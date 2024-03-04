@@ -534,7 +534,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label> Is Raid? </Form.Label>
+                                            <Form.Label>Is This Scenario A Raid?</Form.Label>
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
@@ -545,7 +545,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
                                             </Form.Control>
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label> Is Destiny? </Form.Label>
+                                            <Form.Label>Is This Scenario / Raid A Destiny? </Form.Label>
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
@@ -559,7 +559,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Destiny Cards</Form.Label>
+                                            <Form.Label>Which Cards Need To Be Used For This Destiny?</Form.Label>
                                             <Select
                                                 onChange={destinyCardHandler}
                                                 value={DESTINY_CARDS.map(card => ({ label: card, value: card }))}
@@ -575,7 +575,7 @@ export const UpdateScenario = ({auth, history, updateScenario, deleteScenario}) 
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Raid Tactics</Form.Label>
+                                            <Form.Label>Raid / Destiny Tactics</Form.Label>
                                             <Select
                                                 onChange={tacticsHandler}
                                                 value={TACTICS.map(tactic => ({ label: tactic, value: tactic }))}
