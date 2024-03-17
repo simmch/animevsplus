@@ -376,24 +376,6 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                         </Form.Group>
                                     </Form.Row>
-
-                                    <Form.Row>
-                                        <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Easy Mode Rewards</Form.Label>
-                                            <Select
-                                                onChange={easyArmHandler}
-                                                value={EASY_DROPS.map(arm => ({ label: arm, value: arm }))}
-                                                isMulti
-                                                options={reward_selector}
-                                                className="basic-multi-select"
-                                                classNamePrefix="select"
-                                                styles={styleSheet}
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                        </Form.Group>
- 
-                                    </Form.Row>
-
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
                                             <Form.Label>Normal Mode Rewards</Form.Label>
@@ -442,19 +424,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
                                             
                                         </Form.Group>
                                         <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Is This Scenario A Raid?</Form.Label>
-                                            <Form.Control
-                                                as="select"
-                                                id="inlineFormCustomSelectPref"
-                                                onChange={onChangeHandler}
-                                            >
-                                                <option value={true} name="true">Yes</option>
-                                                <option value={""} name="false">No</option>
-                                            </Form.Control>
-                                        </Form.Group>
-
-                                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                            <Form.Label>Is This Scenario / Raid A Destiny?</Form.Label>
+                                            <Form.Label>Is This A Destiny?</Form.Label>
                                             <Form.Control
                                                 as="select"
                                                 id="inlineFormCustomSelectPref"
@@ -483,7 +453,7 @@ export const NewScenario = ({auth, history, saveScenario}) => {
 
                                     <Form.Row>
                                         <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                            <Form.Label>Raid / Destiny Tactics</Form.Label>
+                                            <Form.Label>Battle Tactics</Form.Label>
                                             <Select
                                                 onChange={tacticsHandler}
                                                 isMulti
