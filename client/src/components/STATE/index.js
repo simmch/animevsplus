@@ -204,6 +204,7 @@ export const unlock_methods = [
     'HEALED IN BOSSES',
     'DAMAGE TAKEN IN BOSSES',
     'DAMAGE DEALT IN BOSSES',
+    'ELEMENTAL DAMAGE DEALT'
 ]
 
 export const title_abilities = [

@@ -63,6 +63,26 @@ router.get("/universe/:title", async (req, res) => {
     }
 })
 
+// @route   GET crown/scenario/$title
+// @desc    Get all scenarios for a universe
+// @access  Public
+router.get("/universe/list/:universe", async (req, res) => {
+
+    try {
+        const scenarios = await Scenario.find({ 'UNIVERSE' : req.params.universe });
+        if (!scenarios) {
+            return res
+                .status(400)
+                .json({ msg: "No scenarios were returned. " });
+        } else {
+            res.json(scenarios);
+        }
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send("Server Error.")
+    }
+})
+
 
 // @route   POST crown/scenarios/update
 // @desc    Create new scenarios
