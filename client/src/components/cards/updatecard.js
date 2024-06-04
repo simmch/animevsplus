@@ -1208,19 +1208,7 @@ export const UpdateCard = ({auth, cards, history, updateCard, deleteCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-                                        <Form.Group as={Col} md="1" controlId="validationCustom26">
-                                            <Form.Label>Power</Form.Label>
-                                            <Form.Control
-                                                value={ENHANCER_POWER}
-                                                name="ENHANCER_POWER"
-                                                onChange={moveHandler}
-                                                required
-                                                type="number"
 
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
                                         <Form.Group as={Col} md="12" controlId="validationCustom27">
                                             <Form.Label>Available</Form.Label>
                                             

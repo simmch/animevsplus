@@ -87,7 +87,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
         MOVE3_POWER: null,
         MOVE3_ELEMENT: "",
         ENHANCER_ABILITY: "",
-        ENHANCER_POWER: null,
+        ENHANCER_POWER: 25,
         ENHANCEMENT_TYPE: ""
     });
     // Build Moves
@@ -1437,19 +1437,7 @@ export const NewCard = ({auth, cards, history, saveCard}) => {
                                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                             
                                         </Form.Group>
-                                        <Form.Group as={Col} md="1" controlId="validationCustom02">
-                                            <Form.Label>Power</Form.Label>
-                                            <Form.Control
-                                                value={ENHANCER_POWER}
-                                                name="ENHANCER_POWER"
-                                                onChange={moveHandler}
-                                                required
-                                                type="number"
 
-                                            />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            
-                                        </Form.Group>
                                         <Form.Group as={Col} md="2" controlId="validationCustom02">
                                         <Form.Label> Available </Form.Label>
                                         
