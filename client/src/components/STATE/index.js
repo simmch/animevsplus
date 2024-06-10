@@ -309,6 +309,7 @@ export const elements = [
     "LIGHT",
     "DARK",
     "POISON",
+    "ROT",
     "RANGED",
     "SPIRIT",
     "GUN",
