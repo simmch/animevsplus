@@ -173,10 +173,10 @@ export const title_explanations = {
     'PIERCE': 'Hit through all barriers',
     'SYNTHESIS': 'Hits to your barriers store 50% of damage dealt, you heal from this amount on resolve.',
     'SPELL SHIELD': 'All shields will absorb elemental damage healing you',
-    'ELEMENTAL BUFF': 'Increase elemental damage by 35%',
-    'ELEMENTAL DEBUFF': 'Decrease opponent\'s elemental damage by 35%',
+    'ELEMENTAL BUFF': 'Increase elemental damage by 50%',
+    'ELEMENTAL DEBUFF': 'Decrease opponent\'s elemental damage by 50%',
     'ENHANCED GUARD': 'Negates 80% of damage when blocking, prevents critical hits.',
-    'STRATEGIST': 'Hits through all guards',
+    'STRATEGIST': 'Hits through all guards / protections',
     'SHARPSHOOTER': 'Attacks never miss',
     'DIVINITY': 'Ignore elemental effects until resolved',
 }
@@ -201,9 +201,6 @@ export const unlock_methods = [
     'HEALED IN DUNGEONS',
     'DAMAGE TAKEN IN DUNGEONS',
     'DAMAGE DEALT IN DUNGEONS',
-    'HEALED IN BOSSES',
-    'DAMAGE TAKEN IN BOSSES',
-    'DAMAGE DEALT IN BOSSES',
     'ELEMENTAL DAMAGE DEALT'
 ]
 
@@ -314,6 +311,9 @@ export const elements = [
     "POISON",
     "RANGED",
     "SPIRIT",
+    "GUN",
+    "NATURE",
+    "SLEEP",
     "BLEED",
     "TIME",
     "GRAVITY",
