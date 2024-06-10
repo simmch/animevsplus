@@ -314,6 +314,7 @@ export const elements = [
     "GUN",
     "NATURE",
     "SLEEP",
+    "SWORD",
     "BLEED",
     "TIME",
     "GRAVITY",
