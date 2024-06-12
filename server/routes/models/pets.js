@@ -26,7 +26,7 @@ const PetSchema = new mongoose.Schema({
         required: true
     },
     DROP_STYLE: {
-        type: Boolean,
+        type: String,
         required: true
     },
     
