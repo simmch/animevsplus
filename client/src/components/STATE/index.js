@@ -265,6 +265,7 @@ export const classes = [
     'SUMMONER', // Can user summon from start of the match
     'SWORDSMAN', // At resolve gain 3 critical strikes
     'MONSTROSITY', // On resolve gain 2 Double Strikes
+    'TACTICIAN', // Complex as hell to type
 ]
 
 export const enhancements = [
