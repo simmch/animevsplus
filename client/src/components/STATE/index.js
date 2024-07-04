@@ -324,6 +324,7 @@ export const elements = [
     "BARRIER",
     "PARRY",
     "SHIELD",
+    "DRACONIC",
     "N/A"
 ]
 
