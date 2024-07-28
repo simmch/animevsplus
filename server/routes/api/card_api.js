@@ -30,7 +30,7 @@ router.get("/names/:universe", async (req, res) => {
         if (!cards) {
             return res.status(400).json({ msg: `No cards were found for universe '${universe}'` });
         }
-        res.json(cards.map(card => `${card.NAME} - ${card.TIER.toString()}`));
+        res.json(cards.map(card => `${card.NAME}`));
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error.");
@@ -103,7 +103,7 @@ router.get("/universe/list/:universe", async (req, res) => {
             const cardNames = cards.map(card => { return { NAME: card.NAME, TIER: card.TIER} });
             let message = []
             cardNames.forEach(card => {
-                message.push(`${card.NAME} (${card.TIER})`)
+                message.push(`${card.NAME}`)
             })
             res.json(message);
         }
