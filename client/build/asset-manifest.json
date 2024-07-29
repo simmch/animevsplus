@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.05667eb4.css",
-    "main.js": "/static/js/main.36b1fdd6.js",
+    "main.css": "/static/css/main.eb3b8af7.css",
+    "main.js": "/static/js/main.2e4530ef.js",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.53f53f50a1b2033979f5.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.9.55": "/static/media/materialdesignicons-webfont.0e4e0b3da55fa7faa77b.ttf",
     "static/media/materialdesignicons-webfont.woff?v=5.9.55": "/static/media/materialdesignicons-webfont.d8e8e0f7931afa097409.woff",
@@ -36,11 +36,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.05667eb4.css.map": "/static/css/main.05667eb4.css.map",
-    "main.36b1fdd6.js.map": "/static/js/main.36b1fdd6.js.map"
+    "main.eb3b8af7.css.map": "/static/css/main.eb3b8af7.css.map",
+    "main.2e4530ef.js.map": "/static/js/main.2e4530ef.js.map"
   },
   "entrypoints": [
-    "static/css/main.05667eb4.css",
-    "static/js/main.36b1fdd6.js"
+    "static/css/main.eb3b8af7.css",
+    "static/js/main.2e4530ef.js"
   ]
 }

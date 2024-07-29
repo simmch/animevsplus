@@ -2,7 +2,7 @@
   "name": "crowndashboard",
   "version": "1.0.0",
   "engines": {
-    "node": "16.15.0"
+    "node": "20.0.0"
   },
   "description": "",
   "main": "index.js",
