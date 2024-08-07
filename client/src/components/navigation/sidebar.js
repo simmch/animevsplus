@@ -143,12 +143,12 @@ const Sidebar = (props) => {
 
           <li
             className={
-              isPathActive("/cards")
+              isPathActive("/mycards")
                 ? "nav-item menu-items active"
                 : "nav-item menu-items"
             }
           >
-            <Link className="nav-link" to="/cards">
+            <Link className="nav-link" to="/mycards">
               <span className="menu-icon">
                 <i className="mdi mdi-account"></i>
               </span>

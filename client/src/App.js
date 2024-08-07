@@ -9,6 +9,7 @@ import Navbar from './components/navigation/navbar';
 import Sidebar from './components/navigation/sidebar';
 import NewCard from './components/cards/newcard';
 import UpdateCard from './components/cards/updatecard';
+import UserCards from './components/cards/UserCards';
 import UpdateArm from './components/arms/updatearm';
 import NewArm from './components/arms/newarm';
 import NewUniverse from './components/universe/newuniverse';
@@ -48,6 +49,7 @@ const App = () => {
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/newcard" component={NewCard} />
                     <Route exact path="/updatecards" component={UpdateCard} />
+                    <Route exact path="/mycards" component={UserCards} />
                     <Route exact path="/newarm" component={NewArm} />
                     <Route exact path="/updatearms" component={UpdateArm} />
                     <Route exact path="/newabyss" component={NewAbyss} />
